@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>IRON LOG — Workout Tracker</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --ink:#15171c;
+  --panel:#1e2128;
+  --panel-raised:#262a33;
+  --line:#33373f;
+  --chalk:#edeae2;
+  --smoke:#8b8f99;
+  --plate:#e0562f;
+  --plate-dim:#7a3524;
+  --teal:#4fa98c;
+  --blue:#5c7cfa;
+  --done-bg:#26312c;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--ink);
+  color:var(--chalk);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:640px;margin:0 auto;padding:24px 18px 80px;}
+
+/* HEADER */
+.header{margin-bottom:22px;}
+.eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:11px;
+  letter-spacing:.18em;
+  color:var(--smoke);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+h1{
+  font-family:'Oswald',sans-serif;
+  font-weight:700;
+  font-size:38px;
+  letter-spacing:.01em;
+  text-transform:uppercase;
+  margin:0 0 4px;
+  line-height:1;
+}
+h1 span{color:var(--plate);}
+.subhead{color:var(--smoke);font-size:13.5px;}
+
+/* DAY TABS */
+.tabs{display:flex;gap:8px;margin:22px 0 16px;}
+.tab{
+  flex:1;
+  background:var(--panel);
+  border:1px solid var(--line);
+  color:var(--smoke);
+  font-family:'Oswald',sans-serif;
+  font-weight:600;
+  font-size:14px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  padding:12px 6px;
+  border-radius:6px;
+  cursor:pointer;
+  text-align:center;
+  transition:all .15s ease;
+  position:relative;
+}
+.tab .dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  margin-right:6px;vertical-align:middle;position:relative;top:-1px;
+}
+.tab[data-day="Sunday"] .dot{background:var(--plate);}
+.tab[data-day="Tuesday"] .dot{background:var(--teal);}
+.tab[data-day="Friday"] .dot{background:var(--blue);}
+.tab.active{color:var(--chalk);border-color:var(--chalk);}
+.tab.today::after{
+  content:"TODAY";
+  position:absolute;top:-8px;right:6px;
+  font-family:'Space Mono',monospace;
+  font-size:8px;letter-spacing:.1em;
+  background:var(--plate);color:var(--ink);
+  padding:2px 5px;border-radius:3px;font-weight:700;
+}
+
+/* PROGRESS */
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.progress-track{
+  flex:1;height:8px;background:var(--panel);border-radius:4px;overflow:hidden;
+  border:1px solid var(--line);
+}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--plate-dim),var(--plate));width:0%;transition:width .3s ease;}
+.progress-label{
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--smoke);white-space:nowrap;
+}
+
+/* EXERCISE LIST */
+.list{display:flex;flex-direction:column;gap:8px;margin-bottom:22px;}
+.ex{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:12px 14px;
+  transition:background .15s ease, border-color .15s ease;
+}
+.ex.done{background:var(--done-bg);border-color:#3a5545;}
+.ex-top{display:flex;align-items:flex-start;gap:12px;cursor:pointer;}
+.checkbox{
+  flex-shrink:0;
+  width:24px;height:24px;
+  border-radius:6px;
+  border:2px solid var(--smoke);
+  margin-top:2px;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s ease;
+}
+.ex.done .checkbox{background:var(--teal);border-color:var(--teal);}
+.checkbox svg{width:14px;height:14px;opacity:0;transition:opacity .1s ease;}
+.ex.done .checkbox svg{opacity:1;}
+.ex-name{
+  font-family:'Oswald',sans-serif;
+  font-weight:500;
+  font-size:16px;
+  text-transform:uppercase;
+  letter-spacing:.01em;
+  line-height:1.25;
+}
+.ex.done .ex-name{color:var(--smoke);text-decoration:line-through;text-decoration-color:#4a5a52;}
+.ex-target{
+  font-family:'Space Mono',monospace;
+  font-size:11.5px;
+  color:var(--plate);
+  margin-top:2px;
+}
+.ex.done .ex-target{color:var(--smoke);}
+
+.ex-fields{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);
+}
+.field label{
+  display:block;font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:.08em;color:var(--smoke);text-transform:uppercase;margin-bottom:4px;
+}
+.field input{
+  width:100%;background:var(--panel-raised);border:1px solid var(--line);
+  color:var(--chalk);border-radius:5px;padding:8px 9px;font-size:13.5px;
+  font-family:'Inter',sans-serif;
+}
+.field input::placeholder{color:#5c6169;}
+.field input:focus{outline:none;border-color:var(--teal);}
+.last-time{
+  grid-column:1/-1;font-size:11px;color:var(--smoke);font-family:'Space Mono',monospace;
+}
+
+/* ACTIONS */
+.actions{display:flex;gap:10px;position:sticky;bottom:14px;margin-top:6px;}
+.btn{
+  flex:1;padding:14px;border-radius:8px;border:none;
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;cursor:pointer;
+}
+.btn-save{background:var(--plate);color:var(--ink);box-shadow:0 4px 18px rgba(224,86,47,.35);}
+.btn-save:active{transform:scale(.98);}
+.btn-history{background:var(--panel);color:var(--chalk);border:1px solid var(--line);}
+
+/* HISTORY */
+.history{display:none;flex-direction:column;gap:10px;margin-top:6px;}
+.history.open{display:flex;}
+.hist-entry{
+  background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+}
+.hist-date{font-family:'Space Mono',monospace;font-size:12px;color:var(--plate);margin-bottom:6px;}
+.hist-ex{font-size:13px;color:var(--smoke);margin:2px 0;}
+.hist-ex b{color:var(--chalk);font-weight:600;}
+.empty-note{color:var(--smoke);font-size:13px;text-align:center;padding:20px 0;}
+
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
+  background:var(--chalk);color:var(--ink);padding:10px 18px;border-radius:20px;
+  font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:.03em;
+  text-transform:uppercase;opacity:0;transition:all .25s ease;pointer-events:none;z-index:50;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.reset-link{
+  display:block;text-align:center;color:var(--smoke);font-size:11.5px;
+  font-family:'Space Mono',monospace;margin-top:26px;text-decoration:underline;cursor:pointer;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">Home Strength Program</div>
+    <h1>IRON<span>LOG</span></h1>
+    <div class="subhead" id="dateLine">—</div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0/0</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <div class="actions">
+    <button class="btn btn-save" id="saveBtn">Save Session</button>
+    <button class="btn btn-history" id="historyBtn">History</button>
+  </div>
+
+  <div class="history" id="historyPanel"></div>
+
+  <div class="reset-link" id="clearDraft">Clear today's checkmarks</div>
+</div>
+
+<div class="toast" id="toast">Saved</div>
+
+<script>
+(function(){
+
+// ---------- storage shim: works inside Claude artifacts (window.storage) ----------
+// ---------- and also as a plain static file, e.g. hosted on GitHub Pages (localStorage) ----------
+const hasCloudStorage = !!(window.storage && window.storage.get);
+const storage = {
+  async get(key){
+    if(hasCloudStorage){
+      try{ const r = await window.storage.get(key); return r ? r.value : null; }
+      catch(e){ return null; }
+    }
+    return localStorage.getItem(key);
+  },
+  async set(key, value){
+    if(hasCloudStorage){
+      try{ await window.storage.set(key, value); return true; }
+      catch(e){ return false; }
+    }
+    localStorage.setItem(key, value);
+    return true;
+  }
+};
+
+// ---------- program data ----------
+const PROGRAM = {
+  Sunday: [
+    {n:"Push-ups", t:"3 × 8–12"},
+    {n:"Decline push-ups", t:"3 × 8–12"},
+    {n:"Wide grip push-ups", t:"2 × 10–15"},
+    {n:"Archer push-ups", t:"2 × 5–8 per side"},
+    {n:"Dumbbell pullover", t:"3 × 10–15"},
+    {n:"Dumbbell row", t:"3 × 8–12 per side"},
+    {n:"Standing dumbbell overhead press", t:"3 × 8–12"},
+    {n:"Rear delt fly", t:"2 × 12–15"},
+    {n:"Lateral raises", t:"2 × 12–20"},
+    {n:"Dumbbell curl", t:"2 × 8–12"},
+    {n:"Hammer curl", t:"2 × 8–12"},
+    {n:"Diamond push-ups", t:"2 sets to near-failure"},
+    {n:"Dumbbell overhead tricep extension", t:"2 × 10–15"},
+    {n:"Goblet squat", t:"3 × 8–12"},
+    {n:"Situp", t:"3 × 15–25"}
+  ],
+  Tuesday: [
+    {n:"Weighted push-ups", t:"2 × 8–12"},
+    {n:"Weighted decline push-ups", t:"2 × 8–12"},
+    {n:"Wide grip push-ups", t:"2 × 10–15"},
+    {n:"Dumbbell pullover", t:"2 × 10–15"},
+    {n:"Dumbbell row", t:"2 × 8–12 per side"},
+    {n:"Standing dumbbell overhead press", t:"2 × 8–12"},
+    {n:"Rear delt fly", t:"2 × 12–15"},
+    {n:"Lateral raises", t:"2 × 12–20"},
+    {n:"Dumbbell curl", t:"2 × 8–12"},
+    {n:"Hammer curl", t:"2 × 8–12"},
+    {n:"Dumbbell overhead tricep extension", t:"2 × 10–15"},
+    {n:"Goblet squat", t:"2 × 8–12"},
+    {n:"Situp", t:"2 × 15–25"}
+  ],
+  Friday: [
+    {n:"Weighted push-ups", t:"2 × 8–12"},
+    {n:"Wide grip push-ups", t:"2 × 10–15"},
+    {n:"Dumbbell row", t:"2 × 8–12 per side"},
+    {n:"Standing dumbbell overhead press", t:"2 × 8–12"},
+    {n:"Lateral raises", t:"2 × 12–20"},
+    {n:"Hammer curl", t:"2 × 8–12"},
+    {n:"Diamond push-ups", t:"1–2 sets to near-failure"},
+    {n:"Goblet squat", t:"2 × 8–12"},
+    {n:"Situp", t:"2 × 15–25"}
+  ]
+};
+const DAYS = ["Sunday","Tuesday","Friday"];
+
+// ---------- state ----------
+let currentDay = null;
+let draft = {};      // { Sunday: { todayDate, exercises: {name:{done,weight,reps}} }, ... }
+let history = [];    // [{date, day, exercises:[{name,done,weight,reps}]}]
+let historyOpen = false;
+
+function todayStr(){
+  return new Date().toISOString().slice(0,10);
+}
+function todayDayName(){
+  return new Date().toLocaleDateString('en-US',{weekday:'long'});
+}
+
+function emptyDraftFor(day){
+  const exObj = {};
+  PROGRAM[day].forEach(ex => exObj[ex.n] = {done:false, weight:"", reps:""});
+  return {todayDate: todayStr(), exercises: exObj};
+}
+
+function lastLoggedFor(day, name){
+  for(let i=history.length-1;i>=0;i--){
+    const h = history[i];
+    if(h.day !== day) continue;
+    const found = h.exercises.find(e => e.name === name && (e.weight || e.reps));
+    if(found) return found;
+  }
+  return null;
+}
+
+// ---------- render ----------
+function renderTabs(){
+  const tabsEl = document.getElementById('tabs');
+  tabsEl.innerHTML = "";
+  DAYS.forEach(day => {
+    const btn = document.createElement('div');
+    btn.className = 'tab' + (day===currentDay?' active':'') + (day===todayDayName()?' today':'');
+    btn.dataset.day = day;
+    btn.innerHTML = `<span class="dot"></span>${day}`;
+    btn.onclick = () => { currentDay = day; renderAll(); };
+    tabsEl.appendChild(btn);
+  });
+}
+
+function renderList(){
+  const listEl = document.getElementById('list');
+  listEl.innerHTML = "";
+  const dayDraft = draft[currentDay];
+  let doneCount = 0;
+
+  PROGRAM[currentDay].forEach(ex => {
+    const state = dayDraft.exercises[ex.n];
+    if(state.done) doneCount++;
+    const last = lastLoggedFor(currentDay, ex.n);
+
+    const row = document.createElement('div');
+    row.className = 'ex' + (state.done ? ' done' : '');
+
+    row.innerHTML = `
+      <div class="ex-top">
+        <div class="checkbox">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#15171c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="ex-name">${ex.n}</div>
+          <div class="ex-target">${ex.t}</div>
+        </div>
+      </div>
+      <div class="ex-fields">
+        <div class="field">
+          <label>Weight used</label>
+          <input type="text" inputmode="decimal" placeholder="${last && last.weight ? last.weight+' lb last time' : 'e.g. 25 lb'}" value="${state.weight}" data-field="weight">
+        </div>
+        <div class="field">
+          <label>Reps done</label>
+          <input type="text" placeholder="${last && last.reps ? last.reps+' last time' : 'e.g. 12,10,9'}" value="${state.reps}" data-field="reps">
+        </div>
+      </div>
+    `;
+
+    row.querySelector('.ex-top').onclick = () => {
+      state.done = !state.done;
+      persistDraft();
+      renderList();
+      renderProgress();
+    };
+    row.querySelectorAll('.ex-fields input').forEach(inp => {
+      inp.addEventListener('click', e => e.stopPropagation());
+      inp.addEventListener('input', e => {
+        state[e.target.dataset.field] = e.target.value;
+        persistDraft();
+      });
+    });
+
+    listEl.appendChild(row);
+  });
+
+  renderProgress(doneCount);
+}
+
+function renderProgress(doneCountArg){
+  const total = PROGRAM[currentDay].length;
+  let doneCount = doneCountArg;
+  if(doneCount === undefined){
+    doneCount = Object.values(draft[currentDay].exercises).filter(e=>e.done).length;
+  }
+  document.getElementById('progressFill').style.width = (total? (doneCount/total*100) : 0) + '%';
+  document.getElementById('progressLabel').textContent = `${doneCount}/${total}`;
+}
+
+function renderHistory(){
+  const panel = document.getElementById('historyPanel');
+  panel.innerHTML = "";
+  const relevant = history.filter(h => h.day === currentDay).slice().reverse();
+  if(relevant.length === 0){
+    panel.innerHTML = `<div class="empty-note">No saved ${currentDay} sessions yet.</div>`;
+    return;
+  }
+  relevant.forEach(h => {
+    const entry = document.createElement('div');
+    entry.className = 'hist-entry';
+    const loggedEx = h.exercises.filter(e => e.done || e.weight || e.reps);
+    entry.innerHTML = `<div class="hist-date">${h.date} — ${loggedEx.filter(e=>e.done).length}/${h.exercises.length} completed</div>` +
+      loggedEx.map(e => `<div class="hist-ex"><b>${e.name}</b>${e.weight?` — ${e.weight} lb`:''}${e.reps?` — ${e.reps} reps`:''}</div>`).join('');
+    panel.appendChild(entry);
+  });
+}
+
+function renderAll(){
+  document.getElementById('dateLine').textContent =
+    new Date().toLocaleDateString('en-US',{weekday:'long', month:'long', day:'numeric'});
+  renderTabs();
+  renderList();
+  if(historyOpen) renderHistory();
+}
+
+// ---------- persistence ----------
+async function persistDraft(){
+  await storage.set('workout-draft', JSON.stringify(draft));
+}
+async function persistHistory(){
+  await storage.set('workout-history', JSON.stringify(history));
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+async function init(){
+  const savedHistory = await storage.get('workout-history');
+  history = savedHistory ? JSON.parse(savedHistory) : [];
+
+  const savedDraft = await storage.get('workout-draft');
+  draft = savedDraft ? JSON.parse(savedDraft) : {};
+
+  DAYS.forEach(day => {
+    if(!draft[day] || draft[day].todayDate !== todayStr()){
+      draft[day] = emptyDraftFor(day);
+    }
+  });
+  await persistDraft();
+
+  currentDay = DAYS.includes(todayDayName()) ? todayDayName() : "Sunday";
+  renderAll();
+}
+
+document.getElementById('saveBtn').onclick = async () => {
+  const dayDraft = draft[currentDay];
+  const exercisesLog = PROGRAM[currentDay].map(ex => ({
+    name: ex.n,
+    done: dayDraft.exercises[ex.n].done,
+    weight: dayDraft.exercises[ex.n].weight,
+    reps: dayDraft.exercises[ex.n].reps
+  }));
+  const doneCount = exercisesLog.filter(e=>e.done).length;
+
+  // replace today's entry for this day if one already exists, else append
+  const existingIdx = history.findIndex(h => h.date === todayStr() && h.day === currentDay);
+  const entry = {date: todayStr(), day: currentDay, exercises: exercisesLog};
+  if(existingIdx >= 0) history[existingIdx] = entry;
+  else history.push(entry);
+
+  await persistHistory();
+  showToast(`Saved — ${doneCount}/${exercisesLog.length} done`);
+  if(historyOpen) renderHistory();
+};
+
+document.getElementById('historyBtn').onclick = () => {
+  historyOpen = !historyOpen;
+  const panel = document.getElementById('historyPanel');
+  panel.classList.toggle('open', historyOpen);
+  document.getElementById('historyBtn').textContent = historyOpen ? 'Hide History' : 'History';
+  if(historyOpen) renderHistory();
+};
+
+document.getElementById('clearDraft').onclick = async () => {
+  draft[currentDay] = emptyDraftFor(currentDay);
+  await persistDraft();
+  renderList();
+  showToast('Cleared');
+};
+
+init();
+})();
+</script>
+</body>
+</html>
