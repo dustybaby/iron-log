@@ -71,6 +71,7 @@ h1 span{color:var(--plate);}
 .account-bar span{cursor:pointer;}
 .account-bar .acc-name{color:var(--teal);cursor:default;}
 .account-bar .acc-link{text-decoration:underline;}
+.sync-status{color:var(--smoke);cursor:default !important;text-decoration:none !important;font-style:italic;}
 .share-toggle{display:flex;align-items:center;gap:6px;}
 .switch{width:30px;height:17px;background:var(--panel-raised);border:1px solid var(--line);border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;}
 .switch .knob{position:absolute;top:1px;left:1px;width:13px;height:13px;border-radius:50%;background:var(--smoke);transition:all .15s ease;}
@@ -140,6 +141,27 @@ h1 span{color:var(--plate);}
 .daruma-history-item{font-size:11.5px;color:var(--smoke);margin:3px 0;font-family:'Space Mono',monospace;}
 .daruma-history-item b{color:var(--gold);}
 
+/* SETTINGS */
+.settings-toggle{display:block;text-align:center;color:var(--gold);font-size:12.5px;font-family:'Space Mono',monospace;margin-bottom:14px;text-decoration:underline;cursor:pointer;}
+.settings-panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:18px;}
+.settings-panel.open{display:block;}
+.settings-section-title{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--smoke);margin:14px 0 8px;}
+.settings-section-title:first-child{margin-top:0;}
+.settings-section-title span{color:var(--gold);}
+.day-chip-row, .edit-day-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.day-chip{padding:8px 11px;border-radius:6px;background:var(--panel-raised);border:1px solid var(--line);color:var(--smoke);font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;}
+.day-chip.active{background:var(--teal);color:var(--ink);border-color:var(--teal);font-weight:700;}
+.edit-day-tab{padding:6px 11px;border-radius:5px;background:var(--panel-raised);border:1px solid var(--line);color:var(--smoke);font-family:'Space Mono',monospace;font-size:11px;cursor:pointer;}
+.edit-day-tab.active{color:var(--chalk);border-color:var(--chalk);}
+.ex-edit-row{display:flex;justify-content:space-between;align-items:center;background:var(--panel-raised);border:1px solid var(--line);border-radius:6px;padding:9px 11px;margin-bottom:6px;}
+.ex-edit-name{font-size:13px;color:var(--chalk);}
+.ex-edit-target{font-family:'Space Mono',monospace;font-size:11px;color:var(--plate);margin-top:2px;}
+.ex-edit-row .remove-x{color:#e07a6a;cursor:pointer;font-family:'Space Mono',monospace;font-weight:700;font-size:16px;padding:0 4px;flex-shrink:0;}
+.add-exercise-form{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px;}
+.settings-empty{color:var(--smoke);font-size:12.5px;padding:10px 0;}
+.settings-actions{display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);flex-wrap:wrap;gap:10px;}
+.settings-actions .reset-link{margin-top:0;}
+
 /* DAY TABS */
 .tabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap;}
 .tab{
@@ -149,10 +171,6 @@ h1 span{color:var(--plate);}
   transition:all .15s ease;position:relative;
 }
 .tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:middle;position:relative;top:-1px;}
-.tab[data-day="Sunday"] .dot{background:var(--plate);}
-.tab[data-day="Tuesday"] .dot{background:var(--teal);}
-.tab[data-day="Friday"] .dot{background:var(--blue);}
-.tab[data-day="Runs"] .dot{background:var(--cardio);}
 .tab.active{color:var(--chalk);border-color:var(--chalk);}
 .tab.today::after{
   content:"TODAY";position:absolute;top:-8px;right:6px;font-family:'Space Mono',monospace;
@@ -185,6 +203,8 @@ h1 span{color:var(--plate);}
 .pr-chip{font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;background:var(--gold);color:var(--ink);padding:2px 6px;border-radius:4px;letter-spacing:.04em;}
 .ex-target{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--plate);margin-top:2px;}
 .ex.done .ex-target{color:var(--smoke);}
+.ex-last{font-family:'Space Mono',monospace;font-size:11px;color:var(--smoke);margin-top:5px;}
+.ex-last b{color:var(--teal);font-weight:700;}
 .ex-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
 .field label{display:block;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--smoke);text-transform:uppercase;margin-bottom:4px;}
 .field input{
@@ -197,8 +217,13 @@ h1 span{color:var(--plate);}
 /* RUNS TAB */
 .run-form{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:16px;}
 .run-form-title{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cardio);margin-bottom:10px;}
-.run-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.run-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
 .run-fields .field.full{grid-column:1/-1;}
+.run-fields .field.third{grid-column:span 1;}
+.run-pace-preview{
+  font-family:'Space Mono',monospace;font-size:12px;color:var(--cardio);margin-top:8px;padding-top:8px;
+  border-top:1px dashed var(--line);
+}
 .run-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
 .run-card-top{display:flex;justify-content:space-between;align-items:baseline;font-family:'Space Mono',monospace;font-size:12px;color:var(--cardio);margin-bottom:4px;}
 .run-card-stats{font-family:'Oswald',sans-serif;font-size:15px;font-weight:500;}
@@ -216,7 +241,8 @@ h1 span{color:var(--plate);}
 .history{display:none;flex-direction:column;gap:10px;margin-top:6px;}
 .history.open{display:flex;}
 .hist-entry{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;}
-.hist-date{font-family:'Space Mono',monospace;font-size:12px;color:var(--plate);margin-bottom:6px;display:flex;align-items:center;gap:6px;justify-content:space-between;}
+.hist-date{font-family:'Space Mono',monospace;font-size:12px;color:var(--smoke);margin-bottom:6px;display:flex;align-items:center;gap:8px;justify-content:space-between;}
+.hist-badge{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;background:var(--plate-dim);color:var(--chalk);}
 .hist-ex{font-size:13px;color:var(--smoke);margin:2px 0;}
 .hist-ex b{color:var(--chalk);font-weight:600;}
 .empty-note{color:var(--smoke);font-size:13px;text-align:center;padding:20px 0;}
@@ -249,7 +275,6 @@ h1 span{color:var(--plate);}
 .auth-error{color:#e06060;font-size:12px;min-height:16px;margin:8px 0;font-family:'Space Mono',monospace;}
 .auth-links{display:flex;justify-content:space-between;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;color:var(--smoke);}
 .auth-links span{cursor:pointer;text-decoration:underline;}
-.auth-note{margin-top:22px;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;font-size:11.5px;color:var(--smoke);line-height:1.5;text-align:left;font-family:'Space Mono',monospace;}
 #authUsernameWrap{display:none;}
 </style>
 </head>
@@ -279,6 +304,7 @@ h1 span{color:var(--plate);}
 </div>
 
 <div class="account-bar" id="accountBar" style="display:none;">
+  <span class="sync-status" id="syncStatus"></span>
   <div class="share-toggle" id="shareToggleWrap" style="display:none;">
     <span>Share to community</span>
     <div class="switch" id="shareSwitch"><div class="knob"></div></div>
@@ -343,6 +369,26 @@ h1 span{color:var(--plate);}
   <div class="daruma-card">
     <div class="daruma-icon" id="darumaCardIcon"></div>
     <div class="daruma-body" id="darumaBody"></div>
+  </div>
+
+  <div class="settings-toggle" id="settingsToggle">⚙ Customize workout days &amp; exercises</div>
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-section-title">Workout days</div>
+    <div class="day-chip-row" id="dayChipRow"></div>
+
+    <div class="settings-section-title">Editing exercises for <span id="editingDayLabel"></span></div>
+    <div class="edit-day-tabs" id="editDayTabs"></div>
+    <div id="exerciseEditList"></div>
+    <div class="add-exercise-form">
+      <input type="text" class="daruma-input" id="newExName" placeholder="Exercise name" style="margin-bottom:0;">
+      <input type="text" class="daruma-input" id="newExTarget" placeholder="Target, e.g. 3 × 8–12" style="margin-bottom:0;">
+      <button class="daruma-btn left" id="addExerciseBtn">Add Exercise</button>
+    </div>
+
+    <div class="settings-actions">
+      <span class="reset-link" id="resetDayDefault">Reset this day to default</span>
+      <span class="reset-link" id="resetAllDefault">Reset entire plan to default</span>
+    </div>
   </div>
 
   <div class="tabs" id="tabs"></div>
@@ -413,8 +459,8 @@ const localFallback = {
   }
 };
 
-// ---------- program data ----------
-const PROGRAM = {
+// ---------- default program data (the fallback / "factory reset" plan) ----------
+const DEFAULT_PROGRAM = {
   Sunday: [
     {n:"Push-ups", t:"3 × 8–12"},
     {n:"Decline push-ups", t:"3 × 8–12"},
@@ -459,10 +505,10 @@ const PROGRAM = {
     {n:"Situp", t:"2 × 15–25"}
   ]
 };
-const PROGRAM_DAYS = ["Sunday","Tuesday","Friday"];
-const TABS = ["Sunday","Tuesday","Friday","Runs"];
+const DEFAULT_ACTIVE_DAYS = ["Sunday","Tuesday","Friday"];
+const ALL_WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const DAY_INDEX = {Sunday:0, Monday:1, Tuesday:2, Wednesday:3, Thursday:4, Friday:5, Saturday:6};
-const SCHEDULED_INDEXES = [0,2,5];
+const DAY_COLORS = {Sunday:'#e0562f', Monday:'#c77dff', Tuesday:'#4fa98c', Wednesday:'#f2a65a', Thursday:'#e85d75', Friday:'#5c7cfa', Saturday:'#7dd3c0'};
 const STREAK_MILESTONES = [3,7,14,21,30,50,75,100,150,200,365];
 
 // ---------- quotes (original lines, not attributed to anyone) ----------
@@ -502,7 +548,7 @@ const QUOTES = [
   "You're stronger than the excuse you almost used today.",
   "Every checked box is proof you kept your word to yourself.",
   "The streak isn't the point. Who it's turning you into is.",
-  "Every mile logged is a mile the old you wouldn't have run."
+  "Every kilometer logged is one the old you wouldn't have run."
 ];
 
 function hashStr(str){
@@ -520,6 +566,9 @@ let historyOpen = false;
 let darumaGoal = defaultDaruma();
 let darumaHistory = [];
 let shareToCommunity = false;
+let activeDays = DEFAULT_ACTIVE_DAYS.slice();
+let customProgram = {};
+let editingDay = null; // which day's exercise list is shown in Settings
 let shuffledQuoteIndex = null;
 let persistTimer = null;
 let applyingRemoteUpdate = false;
@@ -529,9 +578,24 @@ function todayStr(){ return new Date().toISOString().slice(0,10); }
 function todayDayName(){ return new Date().toLocaleDateString('en-US',{weekday:'long'}); }
 function vibrate(pattern){ if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} } }
 
+function getProgramForDay(day){
+  if(customProgram[day]) return customProgram[day];
+  return DEFAULT_PROGRAM[day] || [];
+}
+function ensureCustomProgramDay(day){
+  if(!customProgram[day]){
+    customProgram[day] = (DEFAULT_PROGRAM[day] || []).map(e => ({n:e.n, t:e.t}));
+  }
+}
+function getTabs(){
+  const sorted = activeDays.slice().sort((a,b)=>DAY_INDEX[a]-DAY_INDEX[b]);
+  return sorted.concat(['Runs']);
+}
+function dotColor(day){ return DAY_COLORS[day] || '#8b8f99'; }
+
 function emptyDraftFor(day){
   const exObj = {};
-  PROGRAM[day].forEach(ex => exObj[ex.n] = {done:false, weight:"", reps:""});
+  getProgramForDay(day).forEach(ex => exObj[ex.n] = {done:false, weight:"", reps:""});
   return {todayDate: todayStr(), exercises: exObj};
 }
 
@@ -549,10 +613,26 @@ function parseDurationToSeconds(str){
   return null;
 }
 function formatPace(secondsPerUnit){
-  if(secondsPerUnit == null || !isFinite(secondsPerUnit)) return null;
+  if(secondsPerUnit == null || !isFinite(secondsPerUnit) || secondsPerUnit <= 0) return null;
   const m = Math.floor(secondsPerUnit/60);
   const s = Math.round(secondsPerUnit%60);
   return `${m}:${String(s).padStart(2,'0')}`;
+}
+// Backward-compat: older versions stored runs as free-text {distance:"5 mi", duration:"42:00"}.
+// Convert those into the new {distanceKm, minutes, seconds} shape so nothing is lost.
+function normalizeRun(r){
+  if(r && r.distanceKm !== undefined) return r;
+  const km = r && r.distance ? parseWeight(r.distance) : null;
+  const totalSec = r && r.duration ? parseDurationToSeconds(r.duration) : null;
+  return {
+    id: r.id || (Date.now()+'-'+Math.random().toString(36).slice(2)),
+    date: r.date || todayStr(),
+    distanceKm: km != null ? km : '',
+    minutes: totalSec != null ? Math.floor(totalSec/60) : '',
+    seconds: totalSec != null ? totalSec%60 : '',
+    notes: r.notes || '',
+    ts: r.ts || Date.now()
+  };
 }
 
 function lastLoggedFor(day, name){
@@ -618,21 +698,25 @@ function computeWeekCompletion(){
 function renderStats(){
   document.getElementById('statStreak').textContent = computeStreak();
   document.getElementById('statSessions').textContent = computeTotalSessions();
-  document.getElementById('statWeek').textContent = computeWeekCompletion() + '/3';
+  document.getElementById('statWeek').textContent = computeWeekCompletion() + '/' + Math.max(activeDays.length,1);
 }
 
 function renderNextUp(){
   const el = document.getElementById('nextUp');
+  if(activeDays.length === 0){
+    el.innerHTML = `No workout days set — add some in <b>Customize workout days</b> below.`;
+    return;
+  }
   const todayIdx = new Date().getDay();
-  if(SCHEDULED_INDEXES.includes(todayIdx)){
+  const scheduledIndexes = activeDays.map(d=>DAY_INDEX[d]);
+  if(scheduledIndexes.includes(todayIdx)){
     el.innerHTML = `<b>Workout day</b> — today's session is ${todayDayName()}. Let's go.`;
     return;
   }
   let daysAhead = 1;
   let idx = (todayIdx+1)%7;
-  while(!SCHEDULED_INDEXES.includes(idx)){ idx = (idx+1)%7; daysAhead++; }
-  const names = Object.keys(DAY_INDEX);
-  const nextName = names.find(n => DAY_INDEX[n]===idx);
+  while(!scheduledIndexes.includes(idx)){ idx = (idx+1)%7; daysAhead++; if(daysAhead>7) break; }
+  const nextName = ALL_WEEKDAYS.find(n => DAY_INDEX[n]===idx);
   el.innerHTML = `Rest day — next session is <b>${nextName}</b> (in ${daysAhead} day${daysAhead>1?'s':''}). Go for a run today?`;
 }
 
@@ -775,11 +859,12 @@ function renderHeatmap(){
 function renderTabs(){
   const tabsEl = document.getElementById('tabs');
   tabsEl.innerHTML = "";
-  TABS.forEach(day => {
+  getTabs().forEach(day => {
     const btn = document.createElement('div');
-    btn.className = 'tab' + (day===currentDay?' active':'') + (day===todayDayName()?' today':'');
+    btn.className = 'tab' + (day===currentDay?' active':'') + (day===todayDayName() && day!=='Runs' ?' today':'');
     btn.dataset.day = day;
-    btn.innerHTML = `<span class="dot"></span>${day}`;
+    const dotStyle = day==='Runs' ? 'background:#4fb8d6' : `background:${dotColor(day)}`;
+    btn.innerHTML = `<span class="dot" style="${dotStyle}"></span>${day}`;
     btn.onclick = () => { currentDay = day; document.getElementById('saveBtn').textContent = day==='Runs' ? 'Log Run' : 'Save Session'; renderDayView(); };
     tabsEl.appendChild(btn);
   });
@@ -797,10 +882,19 @@ function renderList(){
   progressRow.style.display = 'flex';
 
   listEl.innerHTML = "";
+  if(!draft[currentDay]) draft[currentDay] = emptyDraftFor(currentDay);
   const dayDraft = draft[currentDay];
+  const program = getProgramForDay(currentDay);
   let doneCount = 0;
 
-  PROGRAM[currentDay].forEach(ex => {
+  if(program.length === 0){
+    listEl.innerHTML = `<div class="empty-note">No exercises yet for ${currentDay}. Add some in "Customize workout days" above.</div>`;
+    renderProgress(0);
+    return;
+  }
+
+  program.forEach(ex => {
+    if(!dayDraft.exercises[ex.n]) dayDraft.exercises[ex.n] = {done:false, weight:"", reps:""};
     const state = dayDraft.exercises[ex.n];
     if(state.done) doneCount++;
     const last = lastLoggedFor(currentDay, ex.n);
@@ -811,27 +905,32 @@ function renderList(){
     const row = document.createElement('div');
     row.className = 'ex' + (state.done ? ' done' : '');
 
+    const lastLine = last
+      ? `<div class="ex-last">Last time: <b>${last.weight ? last.weight+' lb' : '—'}</b>${last.reps ? ' · ' + last.reps + ' reps' : ''}</div>`
+      : `<div class="ex-last">No previous data yet</div>`;
+
     row.innerHTML = `
       <div class="ex-top">
         <div class="checkbox">
           <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#15171c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <div>
+        <div style="flex:1;min-width:0;">
           <div class="ex-name-row">
             <div class="ex-name">${ex.n}</div>
             ${isPR ? '<span class="pr-chip">PR</span>' : ''}
           </div>
           <div class="ex-target">${ex.t}</div>
+          ${lastLine}
         </div>
       </div>
       <div class="ex-fields">
         <div class="field">
           <label>Weight used</label>
-          <input type="text" inputmode="decimal" placeholder="${last && last.weight ? last.weight+' lb last time' : 'e.g. 25 lb'}" value="${state.weight}" data-field="weight">
+          <input type="text" inputmode="decimal" placeholder="e.g. 25 lb" value="${state.weight}" data-field="weight">
         </div>
         <div class="field">
           <label>Reps done</label>
-          <input type="text" placeholder="${last && last.reps ? last.reps+' last time' : 'e.g. 12,10,9'}" value="${state.reps}" data-field="reps">
+          <input type="text" placeholder="e.g. 12,10,9" value="${state.reps}" data-field="reps">
         </div>
       </div>
     `;
@@ -842,12 +941,17 @@ function renderList(){
       schedulePersist(400);
       renderList();
     };
+    // IMPORTANT: only update in-memory state + schedule a save on keystroke.
+    // Do NOT re-render the list here — rebuilding the DOM on every keystroke
+    // was destroying input focus and made it feel like entries weren't saving.
     row.querySelectorAll('.ex-fields input').forEach(inp => {
       inp.addEventListener('click', e => e.stopPropagation());
       inp.addEventListener('input', e => {
         state[e.target.dataset.field] = e.target.value;
         schedulePersist(700);
-        renderList();
+      });
+      inp.addEventListener('blur', () => {
+        renderList(); // safe to refresh (PR badge, etc.) once the user is done typing
       });
     });
 
@@ -860,17 +964,30 @@ function renderList(){
 function renderRunsView(listEl){
   listEl.innerHTML = `
     <div class="run-form">
-      <div class="run-form-title">Log a run</div>
+      <div class="run-form-title">Log a run (distance in km)</div>
       <div class="run-fields">
         <div class="field"><label>Date</label><input type="date" id="runDate" value="${todayStr()}"></div>
-        <div class="field"><label>Distance</label><input type="text" id="runDistance" placeholder="e.g. 5 mi"></div>
-        <div class="field"><label>Duration</label><input type="text" id="runDuration" placeholder="mm:ss e.g. 42:00"></div>
-        <div class="field"><label>Pace shows after saving</label><input type="text" disabled placeholder="auto-calculated"></div>
+        <div class="field"><label>Distance (km)</label><input type="number" step="0.01" min="0" id="runDistance" placeholder="e.g. 5.2"></div>
+        <div class="field"><label>Minutes</label><input type="number" step="1" min="0" id="runMinutes" placeholder="e.g. 28"></div>
+        <div class="field"><label>Seconds</label><input type="number" step="1" min="0" max="59" id="runSeconds" placeholder="e.g. 30"></div>
         <div class="field full"><label>Notes</label><input type="text" id="runNotes" placeholder="e.g. easy pace, humid, felt strong"></div>
       </div>
+      <div class="run-pace-preview" id="runPacePreview">Pace: —</div>
     </div>
     <div id="runHistory"></div>
   `;
+  const distEl = document.getElementById('runDistance');
+  const minEl = document.getElementById('runMinutes');
+  const secEl = document.getElementById('runSeconds');
+  function updatePacePreview(){
+    const km = parseFloat(distEl.value);
+    const mins = parseFloat(minEl.value) || 0;
+    const secs = parseFloat(secEl.value) || 0;
+    const totalSec = mins*60 + secs;
+    const pace = (km > 0 && totalSec > 0) ? formatPace(totalSec/km) : null;
+    document.getElementById('runPacePreview').textContent = pace ? `Pace: ${pace} /km` : 'Pace: —';
+  }
+  [distEl, minEl, secEl].forEach(el => el.addEventListener('input', updatePacePreview));
   renderRunHistory();
 }
 
@@ -881,19 +998,17 @@ function renderRunHistory(){
     el.innerHTML = '<div class="run-empty">No runs logged yet. Add one above.</div>';
     return;
   }
-  const sorted = runs.slice().sort((a,b)=> b.date.localeCompare(a.date) || b.ts - a.ts);
+  const sorted = runs.slice().sort((a,b)=> b.date.localeCompare(a.date) || (b.ts||0) - (a.ts||0));
   el.innerHTML = sorted.map(r => {
-    const dist = parseWeight(r.distance);
-    const secs = parseDurationToSeconds(r.duration);
-    let paceLine = '';
-    if(dist && secs){
-      const unit = (r.distance.match(/km/i)) ? 'km' : 'mi';
-      paceLine = ` · ${formatPace(secs/dist)}/${unit} pace`;
-    }
+    const km = parseFloat(r.distanceKm);
+    const totalSec = (parseFloat(r.minutes)||0)*60 + (parseFloat(r.seconds)||0);
+    const pace = (km > 0 && totalSec > 0) ? formatPace(totalSec/km) : null;
+    const durationLabel = (r.minutes !== '' || r.seconds !== '')
+      ? `${r.minutes||0}:${String(r.seconds||0).padStart(2,'0')}` : '';
     return `
       <div class="run-card">
         <div class="run-card-top"><span>${r.date}</span></div>
-        <div class="run-card-stats">${r.distance || '—'}${r.duration ? ' in ' + r.duration : ''}${paceLine}</div>
+        <div class="run-card-stats">${km ? km + ' km' : '—'}${durationLabel ? ' in ' + durationLabel : ''}${pace ? ' · ' + pace + '/km pace' : ''}</div>
         ${r.notes ? `<div class="run-card-notes">${r.notes}</div>` : ''}
       </div>
     `;
@@ -901,7 +1016,7 @@ function renderRunHistory(){
 }
 
 function renderProgress(doneCountArg){
-  const total = PROGRAM[currentDay].length;
+  const total = getProgramForDay(currentDay).length;
   let doneCount = doneCountArg;
   if(doneCount === undefined){
     doneCount = Object.values(draft[currentDay].exercises).filter(e=>e.done).length;
@@ -912,6 +1027,9 @@ function renderProgress(doneCountArg){
   document.getElementById('progressLabel').textContent = `${doneCount}/${total}`;
 }
 
+// History now always shows every workout day combined (with a colored badge),
+// so it reads the same way regardless of which tab happens to be selected —
+// consistent with how Runs history already worked.
 function renderHistory(){
   const panel = document.getElementById('historyPanel');
   panel.innerHTML = "";
@@ -919,16 +1037,16 @@ function renderHistory(){
     panel.innerHTML = '<div class="empty-note">Run history is shown above the log form on the Runs tab.</div>';
     return;
   }
-  const relevant = history.filter(h => h.day === currentDay).slice().reverse();
+  const relevant = history.slice().sort((a,b)=> b.date.localeCompare(a.date));
   if(relevant.length === 0){
-    panel.innerHTML = `<div class="empty-note">No saved ${currentDay} sessions yet.</div>`;
+    panel.innerHTML = `<div class="empty-note">No saved workouts yet.</div>`;
     return;
   }
   relevant.forEach(h => {
     const entry = document.createElement('div');
     entry.className = 'hist-entry';
     const loggedEx = h.exercises.filter(e => e.done || e.weight || e.reps);
-    entry.innerHTML = `<div class="hist-date"><span>${h.date} — ${loggedEx.filter(e=>e.done).length}/${h.exercises.length} completed</span></div>` +
+    entry.innerHTML = `<div class="hist-date"><span>${h.date} — ${loggedEx.filter(e=>e.done).length}/${h.exercises.length} completed</span><span class="hist-badge" style="background:${dotColor(h.day)}">${h.day}</span></div>` +
       loggedEx.map(e => `<div class="hist-ex"><b>${e.name}</b>${e.weight?` — ${e.weight} lb`:''}${e.reps?` — ${e.reps} reps`:''}</div>`).join('');
     panel.appendChild(entry);
   });
@@ -949,22 +1067,163 @@ function renderAll(){
   renderHeatmap();
   renderDarumaIcons();
   renderDarumaBody();
+  renderSettingsPanel();
   renderDayView();
   renderShareToggleUI();
 }
 
+// ---------- settings: workout days + custom exercises ----------
+document.getElementById('settingsToggle').onclick = () => {
+  document.getElementById('settingsPanel').classList.toggle('open');
+};
+
+function renderSettingsPanel(){
+  if(!editingDay || !activeDays.includes(editingDay)){
+    editingDay = activeDays.slice().sort((a,b)=>DAY_INDEX[a]-DAY_INDEX[b])[0] || null;
+  }
+
+  const chipRow = document.getElementById('dayChipRow');
+  chipRow.innerHTML = '';
+  ALL_WEEKDAYS.forEach(day => {
+    const chip = document.createElement('div');
+    chip.className = 'day-chip' + (activeDays.includes(day) ? ' active' : '');
+    chip.textContent = day.slice(0,3);
+    chip.title = day;
+    chip.onclick = () => {
+      if(activeDays.includes(day)){
+        activeDays = activeDays.filter(d => d !== day);
+        if(currentDay === day) currentDay = null;
+      } else {
+        activeDays.push(day);
+        ensureCustomProgramDay(day);
+        if(!draft[day]) draft[day] = emptyDraftFor(day);
+      }
+      if(!currentDay){
+        const tabs = getTabs();
+        currentDay = tabs[0] || 'Runs';
+      }
+      schedulePersist(0);
+      renderSettingsPanel();
+      renderTabs();
+      renderList();
+      renderNextUp();
+      renderStats();
+    };
+    chipRow.appendChild(chip);
+  });
+
+  const editTabsEl = document.getElementById('editDayTabs');
+  editTabsEl.innerHTML = '';
+  const sortedActive = activeDays.slice().sort((a,b)=>DAY_INDEX[a]-DAY_INDEX[b]);
+  if(sortedActive.length === 0){
+    editTabsEl.innerHTML = '<div class="settings-empty">Turn on a day above to start editing its exercises.</div>';
+    document.getElementById('editingDayLabel').textContent = '—';
+    document.getElementById('exerciseEditList').innerHTML = '';
+    document.getElementById('resetDayDefault').style.display = 'none';
+    return;
+  }
+  sortedActive.forEach(day => {
+    const t = document.createElement('div');
+    t.className = 'edit-day-tab' + (day===editingDay ? ' active' : '');
+    t.textContent = day;
+    t.onclick = () => { editingDay = day; renderSettingsPanel(); };
+    editTabsEl.appendChild(t);
+  });
+
+  document.getElementById('editingDayLabel').textContent = editingDay;
+  const listEl = document.getElementById('exerciseEditList');
+  ensureCustomProgramDay(editingDay);
+  const program = getProgramForDay(editingDay);
+  document.getElementById('resetDayDefault').style.display = DEFAULT_PROGRAM[editingDay] ? 'inline' : 'none';
+
+  if(program.length === 0){
+    listEl.innerHTML = '<div class="settings-empty">No exercises yet — add one below.</div>';
+  } else {
+    listEl.innerHTML = '';
+    program.forEach((ex, idx) => {
+      const row = document.createElement('div');
+      row.className = 'ex-edit-row';
+      row.innerHTML = `
+        <div>
+          <div class="ex-edit-name">${ex.n}</div>
+          <div class="ex-edit-target">${ex.t}</div>
+        </div>
+        <div class="remove-x" title="Remove">×</div>
+      `;
+      row.querySelector('.remove-x').onclick = () => {
+        customProgram[editingDay].splice(idx,1);
+        if(draft[editingDay]) delete draft[editingDay].exercises[ex.n];
+        schedulePersist(0);
+        renderSettingsPanel();
+        renderList();
+      };
+      listEl.appendChild(row);
+    });
+  }
+}
+
+document.getElementById('addExerciseBtn').onclick = () => {
+  if(!editingDay) return;
+  const nameEl = document.getElementById('newExName');
+  const targetEl = document.getElementById('newExTarget');
+  const name = nameEl.value.trim();
+  const target = targetEl.value.trim() || 'As prescribed';
+  if(!name) return;
+  ensureCustomProgramDay(editingDay);
+  customProgram[editingDay].push({n:name, t:target});
+  if(!draft[editingDay]) draft[editingDay] = emptyDraftFor(editingDay);
+  draft[editingDay].exercises[name] = {done:false, weight:"", reps:""};
+  nameEl.value = ''; targetEl.value = '';
+  schedulePersist(0);
+  renderSettingsPanel();
+  renderList();
+  showToast('Exercise added');
+};
+
+document.getElementById('resetDayDefault').onclick = () => {
+  if(!editingDay || !DEFAULT_PROGRAM[editingDay]) return;
+  delete customProgram[editingDay];
+  draft[editingDay] = emptyDraftFor(editingDay);
+  schedulePersist(0);
+  renderSettingsPanel();
+  renderList();
+  showToast(`${editingDay} reset to default`);
+};
+
+document.getElementById('resetAllDefault').onclick = () => {
+  activeDays = DEFAULT_ACTIVE_DAYS.slice();
+  customProgram = {};
+  DEFAULT_ACTIVE_DAYS.forEach(day => draft[day] = emptyDraftFor(day));
+  editingDay = null;
+  if(!getTabs().includes(currentDay)) currentDay = DEFAULT_ACTIVE_DAYS[0];
+  schedulePersist(0);
+  renderAll();
+  showToast('Plan reset to default');
+};
+
 // ---------- persistence (local fallback, or Firestore when logged in) ----------
 function buildStateSnapshot(){
-  return { history, draft, darumaGoal, darumaHistory, runs, shareToCommunity };
+  return { history, draft, darumaGoal, darumaHistory, runs, shareToCommunity, activeDays, customProgram };
+}
+function setSyncStatus(text){
+  const el = document.getElementById('syncStatus');
+  if(el) el.textContent = text;
 }
 async function persistAllNow(){
   if(applyingRemoteUpdate) return;
   const snap = buildStateSnapshot();
   if(db && currentUser){
+    setSyncStatus('Saving…');
     try{
       await db.collection('users').doc(currentUser.uid).collection('app').doc('state')
         .set(Object.assign({}, snap, {updatedAt: firebase.firestore.FieldValue.serverTimestamp()}));
-    }catch(e){ console.error('Sync failed', e); }
+      setSyncStatus('Synced ✓');
+      setTimeout(()=>setSyncStatus(''), 2000);
+    }catch(e){
+      console.error('Sync failed', e);
+      setSyncStatus('Sync failed');
+      showToast('Could not sync — check your connection');
+    }
   } else {
     await localFallback.set('ironlog-state', JSON.stringify(snap));
   }
@@ -986,7 +1245,9 @@ async function migrateOldLocalKeys(){
     darumaGoal: og ? JSON.parse(og) : defaultDaruma(),
     darumaHistory: ogh ? JSON.parse(ogh) : [],
     runs: [],
-    shareToCommunity: false
+    shareToCommunity: false,
+    activeDays: DEFAULT_ACTIVE_DAYS.slice(),
+    customProgram: {}
   };
   await localFallback.set('ironlog-state', JSON.stringify(result));
   return result;
@@ -1005,21 +1266,26 @@ async function loadState(){
   return await migrateOldLocalKeys();
 }
 
+function applyLoadedState(d){
+  history = d.history || [];
+  darumaGoal = d.darumaGoal || defaultDaruma();
+  darumaHistory = d.darumaHistory || [];
+  runs = (d.runs || []).map(normalizeRun);
+  shareToCommunity = !!d.shareToCommunity;
+  activeDays = (d.activeDays && d.activeDays.length) ? d.activeDays : DEFAULT_ACTIVE_DAYS.slice();
+  customProgram = d.customProgram || {};
+  draft = d.draft || {};
+  activeDays.forEach(day => { if(!draft[day] || draft[day].todayDate !== todayStr()) draft[day] = emptyDraftFor(day); });
+}
+
 function attachRealtimeListener(){
   detachRealtimeListener();
   if(!db || !currentUser) return;
   remoteUnsub = db.collection('users').doc(currentUser.uid).collection('app').doc('state')
     .onSnapshot((docSnap) => {
       if(!docSnap.exists) return;
-      const d = docSnap.data();
       applyingRemoteUpdate = true;
-      history = d.history || [];
-      darumaGoal = d.darumaGoal || defaultDaruma();
-      darumaHistory = d.darumaHistory || [];
-      runs = d.runs || [];
-      shareToCommunity = !!d.shareToCommunity;
-      draft = d.draft || {};
-      PROGRAM_DAYS.forEach(day => { if(!draft[day] || draft[day].todayDate !== todayStr()) draft[day] = emptyDraftFor(day); });
+      applyLoadedState(docSnap.data());
       renderAll();
       applyingRemoteUpdate = false;
     }, (err) => console.error('listener error', err));
@@ -1087,22 +1353,16 @@ document.getElementById('communityLink').onclick = () => { window.location.href 
 async function boot(){
   const loaded = await loadState();
   if(loaded){
-    history = loaded.history || [];
-    draft = loaded.draft || {};
-    darumaGoal = loaded.darumaGoal || defaultDaruma();
-    darumaHistory = loaded.darumaHistory || [];
-    runs = loaded.runs || [];
-    shareToCommunity = !!loaded.shareToCommunity;
+    applyLoadedState(loaded);
   } else {
-    history = []; draft = {}; darumaGoal = defaultDaruma(); darumaHistory = []; runs = []; shareToCommunity = false;
+    history = []; draft = {}; darumaGoal = defaultDaruma(); darumaHistory = [];
+    runs = []; shareToCommunity = false; activeDays = DEFAULT_ACTIVE_DAYS.slice(); customProgram = {};
+    activeDays.forEach(day => draft[day] = emptyDraftFor(day));
+    await persistAllNow();
   }
-  PROGRAM_DAYS.forEach(day => {
-    if(!draft[day] || draft[day].todayDate !== todayStr()){
-      draft[day] = emptyDraftFor(day);
-    }
-  });
-  await persistAllNow();
-  currentDay = PROGRAM_DAYS.includes(todayDayName()) ? todayDayName() : "Sunday";
+  const tabs = getTabs();
+  currentDay = tabs.includes(todayDayName()) ? todayDayName() : (tabs[0] || 'Runs');
+  document.getElementById('saveBtn').textContent = currentDay==='Runs' ? 'Log Run' : 'Save Session';
   renderAll();
 }
 
@@ -1210,18 +1470,20 @@ document.getElementById('saveBtn').onclick = async () => {
   if(currentDay === 'Runs'){
     const dateEl = document.getElementById('runDate');
     const distEl = document.getElementById('runDistance');
-    const durEl = document.getElementById('runDuration');
+    const minEl = document.getElementById('runMinutes');
+    const secEl = document.getElementById('runSeconds');
     const notesEl = document.getElementById('runNotes');
     const date = dateEl.value || todayStr();
-    const distance = distEl.value.trim();
-    const duration = durEl.value.trim();
+    const distanceKm = distEl.value.trim();
+    const minutes = minEl.value.trim();
+    const seconds = secEl.value.trim();
     const notes = notesEl.value.trim();
-    if(!distance && !duration){ showToast('Add a distance or duration first'); return; }
-    runs.push({id: Date.now()+'-'+Math.random().toString(36).slice(2), date, distance, duration, notes, ts: Date.now()});
+    if(!distanceKm && !minutes && !seconds){ showToast('Add a distance or duration first'); return; }
+    runs.push({id: Date.now()+'-'+Math.random().toString(36).slice(2), date, distanceKm, minutes, seconds, notes, ts: Date.now()});
     schedulePersist(0);
     vibrate(12);
     showToast('Run logged');
-    postToCommunity({type:'run', date, distance, duration, notes});
+    postToCommunity({type:'run', date, distanceKm, minutes, seconds, notes});
 
     const newStreak = computeStreak();
     if(STREAK_MILESTONES.includes(newStreak)){ showToast(`${newStreak}-day streak — milestone reached`); celebrate(); }
@@ -1231,11 +1493,13 @@ document.getElementById('saveBtn').onclick = async () => {
   }
 
   const dayDraft = draft[currentDay];
-  const exercisesLog = PROGRAM[currentDay].map(ex => ({
+  const program = getProgramForDay(currentDay);
+  if(program.length === 0){ showToast('Add exercises to this day first'); return; }
+  const exercisesLog = program.map(ex => ({
     name: ex.n,
-    done: dayDraft.exercises[ex.n].done,
-    weight: dayDraft.exercises[ex.n].weight,
-    reps: dayDraft.exercises[ex.n].reps
+    done: !!(dayDraft.exercises[ex.n] && dayDraft.exercises[ex.n].done),
+    weight: (dayDraft.exercises[ex.n] && dayDraft.exercises[ex.n].weight) || "",
+    reps: (dayDraft.exercises[ex.n] && dayDraft.exercises[ex.n].reps) || ""
   }));
   const doneCount = exercisesLog.filter(e=>e.done).length;
   const total = exercisesLog.length;
@@ -1298,13 +1562,7 @@ document.getElementById('importBackupFile').onchange = (e) => {
   reader.onload = () => {
     try{
       const data = JSON.parse(reader.result);
-      history = data.history || [];
-      draft = data.draft || {};
-      darumaGoal = data.darumaGoal || defaultDaruma();
-      darumaHistory = data.darumaHistory || [];
-      runs = data.runs || [];
-      shareToCommunity = !!data.shareToCommunity;
-      PROGRAM_DAYS.forEach(day => { if(!draft[day] || draft[day].todayDate !== todayStr()) draft[day] = emptyDraftFor(day); });
+      applyLoadedState(data);
       schedulePersist(0);
       renderAll();
       showToast('Backup restored');

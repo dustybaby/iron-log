@@ -40,6 +40,7 @@ h1 span{color:var(--plate);}
 .badge.Tuesday{background:var(--teal);color:var(--ink);}
 .badge.Friday{background:var(--blue);color:var(--ink);}
 .badge.run{background:var(--cardio);color:var(--ink);}
+.badge.other{background:var(--smoke);color:var(--ink);}
 .card-detail{font-size:13.5px;color:var(--chalk);margin-top:4px;}
 .card-notes{font-size:12.5px;color:var(--smoke);margin-top:4px;font-style:italic;}
 .empty{color:var(--smoke);font-size:13.5px;text-align:center;padding:60px 0;line-height:1.6;}
@@ -108,6 +109,22 @@ h1 span{color:var(--plate);}
         const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
         const username = (d.username || 'Anonymous').replace(/</g,'&lt;');
         if(d.type === 'run'){
+          // Supports both the current km-based shape and older free-text posts.
+          let detail;
+          if(d.distanceKm !== undefined){
+            const km = parseFloat(d.distanceKm);
+            const mins = parseFloat(d.minutes) || 0, secs = parseFloat(d.seconds) || 0;
+            const totalSec = mins*60 + secs;
+            const durationLabel = (d.minutes || d.seconds) ? `${d.minutes||0}:${String(d.seconds||0).padStart(2,'0')}` : '';
+            let pace = '';
+            if(km > 0 && totalSec > 0){
+              const p = totalSec/km;
+              pace = ` · ${Math.floor(p/60)}:${String(Math.round(p%60)).padStart(2,'0')}/km pace`;
+            }
+            detail = `${km ? km + ' km' : '—'}${durationLabel ? ' in ' + durationLabel : ''}${pace} · ${d.date || ''}`;
+          } else {
+            detail = `${d.distance || '—'}${d.duration ? ' in ' + d.duration : ''} · ${d.date || ''}`;
+          }
           cards.push(`
             <div class="card">
               <div class="card-top">
@@ -115,17 +132,18 @@ h1 span{color:var(--plate);}
                 <div class="card-time">${timeAgo(when)}</div>
               </div>
               <span class="badge run">Run</span>
-              <div class="card-detail">${d.distance || '—'}${d.duration ? ' in ' + d.duration : ''} · ${d.date || ''}</div>
+              <div class="card-detail">${detail}</div>
               ${d.notes ? `<div class="card-notes">${String(d.notes).replace(/</g,'&lt;')}</div>` : ''}
             </div>`);
         } else {
+          const badgeClass = ['Sunday','Tuesday','Friday'].includes(d.day) ? d.day : 'other';
           cards.push(`
             <div class="card">
               <div class="card-top">
                 <div class="card-user">${username}</div>
                 <div class="card-time">${timeAgo(when)}</div>
               </div>
-              <span class="badge ${d.day || ''}">${d.day || 'Workout'}</span>
+              <span class="badge ${badgeClass}">${d.day || 'Workout'}</span>
               <div class="card-detail">${d.doneCount ?? 0}/${d.total ?? 0} exercises completed · ${d.date || ''}</div>
             </div>`);
         }
