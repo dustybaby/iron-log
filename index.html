@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 <title>IRON LOG — Workout Tracker</title>
-<meta name="description" content="Home strength training tracker — streaks, PRs, and a daruma goal ritual.">
+<meta name="description" content="Home strength training tracker — streaks, PRs, runs, and a daruma goal ritual.">
 <meta name="theme-color" content="#15171c">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,6 +28,7 @@
   --gold:#e8b93f;
   --teal:#4fa98c;
   --blue:#5c7cfa;
+  --cardio:#4fb8d6;
   --done-bg:#26312c;
 }
 *{box-sizing:border-box;}
@@ -39,43 +40,42 @@ body{
   min-height:100vh;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:640px;margin:0 auto;padding:24px 18px 80px;}
+.wrap{max-width:640px;margin:0 auto;padding:14px 18px 80px;}
 
 /* HEADER */
 .header{margin-bottom:18px;display:flex;gap:14px;align-items:flex-start;}
-.header-text{flex:1;}
+.header-text{flex:1;min-width:0;}
 .eyebrow{
-  font-family:'Space Mono',monospace;
-  font-size:11px;
-  letter-spacing:.18em;
-  color:var(--smoke);
-  text-transform:uppercase;
-  margin-bottom:6px;
+  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;
+  color:var(--smoke);text-transform:uppercase;margin-bottom:6px;
 }
 h1{
-  font-family:'Oswald',sans-serif;
-  font-weight:700;
-  font-size:38px;
-  letter-spacing:.01em;
-  text-transform:uppercase;
-  margin:0 0 4px;
-  line-height:1;
+  font-family:'Oswald',sans-serif;font-weight:700;font-size:38px;letter-spacing:.01em;
+  text-transform:uppercase;margin:0 0 4px;line-height:1;
 }
 h1 span{color:var(--plate);}
 .subhead{color:var(--smoke);font-size:13.5px;}
 .next-up{
-  margin-top:10px;
-  font-size:12.5px;
-  color:var(--chalk);
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-left:3px solid var(--plate);
-  padding:9px 12px;
-  border-radius:6px;
-  font-family:'Space Mono',monospace;
+  margin-top:10px;font-size:12.5px;color:var(--chalk);background:var(--panel);
+  border:1px solid var(--line);border-left:3px solid var(--plate);padding:9px 12px;
+  border-radius:6px;font-family:'Space Mono',monospace;
 }
 .next-up b{color:var(--plate);}
 .header-daruma{flex-shrink:0;width:52px;height:62px;}
+
+/* ACCOUNT BAR */
+.account-bar{
+  max-width:640px;margin:0 auto;padding:10px 18px 0;display:flex;justify-content:flex-end;
+  align-items:center;flex-wrap:wrap;gap:14px;font-family:'Space Mono',monospace;font-size:11px;color:var(--smoke);
+}
+.account-bar span{cursor:pointer;}
+.account-bar .acc-name{color:var(--teal);cursor:default;}
+.account-bar .acc-link{text-decoration:underline;}
+.share-toggle{display:flex;align-items:center;gap:6px;}
+.switch{width:30px;height:17px;background:var(--panel-raised);border:1px solid var(--line);border-radius:10px;position:relative;cursor:pointer;flex-shrink:0;}
+.switch .knob{position:absolute;top:1px;left:1px;width:13px;height:13px;border-radius:50%;background:var(--smoke);transition:all .15s ease;}
+.switch.on{background:var(--teal);border-color:var(--teal);}
+.switch.on .knob{left:15px;background:var(--ink);}
 
 .install-btn{
   width:100%;margin-bottom:16px;padding:11px;border-radius:8px;
@@ -90,43 +90,27 @@ h1 span{color:var(--plate);}
   background:var(--panel);border:1px solid var(--line);border-radius:8px;
   padding:14px 16px;margin:16px 0;display:flex;align-items:center;gap:12px;
 }
-.quote-text{
-  flex:1;font-family:'Oswald',sans-serif;font-weight:400;font-size:15px;
-  font-style:italic;line-height:1.35;color:var(--chalk);
-}
+.quote-text{flex:1;font-family:'Oswald',sans-serif;font-weight:400;font-size:15px;font-style:italic;line-height:1.35;color:var(--chalk);}
 .quote-shuffle{
   flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--panel-raised);
-  border:1px solid var(--line);color:var(--smoke);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);color:var(--smoke);cursor:pointer;display:flex;align-items:center;justify-content:center;
 }
 .quote-shuffle svg{width:15px;height:15px;}
 .quote-shuffle:active{transform:rotate(90deg);}
 
 /* STATS */
 .stats{display:flex;gap:8px;margin:16px 0;}
-.stat{
-  flex:1;background:var(--panel);border:1px solid var(--line);border-radius:8px;
-  padding:10px 8px;text-align:center;
-}
+.stat{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 8px;text-align:center;}
 .stat svg{width:16px;height:16px;margin-bottom:4px;}
 .stat .num{font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;line-height:1;}
-.stat .lbl{
-  font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--smoke);margin-top:3px;
-}
+.stat .lbl{font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--smoke);margin-top:3px;}
 .stat.streak svg{fill:var(--plate);}
 .stat.sessions svg{fill:var(--teal);}
 .stat.week svg{fill:var(--blue);}
 
 /* HEATMAP */
-.heatmap-card{
-  background:var(--panel);border:1px solid var(--line);border-radius:8px;
-  padding:12px 14px 14px;margin-bottom:18px;overflow-x:auto;
-}
-.heatmap-title{
-  font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--smoke);margin-bottom:8px;
-}
+.heatmap-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px 14px;margin-bottom:18px;overflow-x:auto;}
+.heatmap-title{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--smoke);margin-bottom:8px;}
 .heatmap-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7, 11px);gap:3px;width:max-content;}
 .hm-cell{width:11px;height:11px;border-radius:2px;background:var(--panel-raised);border:1px solid rgba(255,255,255,.03);}
 .hm-cell.l1{background:#4a2c22;}
@@ -137,30 +121,18 @@ h1 span{color:var(--plate);}
 .heatmap-legend .hm-cell{width:9px;height:9px;}
 
 /* DARUMA GOAL CARD */
-.daruma-card{
-  background:var(--panel);border:1px solid var(--line);border-radius:8px;
-  padding:16px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-start;
-}
+.daruma-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-start;}
 .daruma-card .daruma-icon{flex-shrink:0;width:64px;height:76px;}
 .daruma-body{flex:1;min-width:0;}
-.daruma-title{
-  font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;
-  text-transform:uppercase;color:var(--smoke);margin-bottom:8px;
-}
-.daruma-goal-text{
-  font-family:'Oswald',sans-serif;font-size:16px;font-weight:500;color:var(--chalk);
-  margin-bottom:6px;line-height:1.3;
-}
+.daruma-title{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--smoke);margin-bottom:8px;}
+.daruma-goal-text{font-family:'Oswald',sans-serif;font-size:16px;font-weight:500;color:var(--chalk);margin-bottom:6px;line-height:1.3;}
 .daruma-sub{font-size:12px;color:var(--smoke);margin-bottom:10px;line-height:1.4;}
 .daruma-input{
   width:100%;background:var(--panel-raised);border:1px solid var(--line);color:var(--chalk);
   border-radius:6px;padding:9px 11px;font-size:13.5px;font-family:'Inter',sans-serif;margin-bottom:10px;
 }
 .daruma-input::placeholder{color:#5c6169;}
-.daruma-btn{
-  padding:9px 14px;border-radius:6px;border:none;cursor:pointer;
-  font-family:'Oswald',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;
-}
+.daruma-btn{padding:9px 14px;border-radius:6px;border:none;cursor:pointer;font-family:'Oswald',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;}
 .daruma-btn.left{background:var(--plate);color:var(--ink);}
 .daruma-btn.right{background:var(--gold);color:var(--ink);}
 .daruma-btn.reset{background:var(--panel-raised);color:var(--chalk);border:1px solid var(--line);}
@@ -169,9 +141,9 @@ h1 span{color:var(--plate);}
 .daruma-history-item b{color:var(--gold);}
 
 /* DAY TABS */
-.tabs{display:flex;gap:8px;margin:0 0 16px;}
+.tabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap;}
 .tab{
-  flex:1;background:var(--panel);border:1px solid var(--line);color:var(--smoke);
+  flex:1;min-width:70px;background:var(--panel);border:1px solid var(--line);color:var(--smoke);
   font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;letter-spacing:.04em;
   text-transform:uppercase;padding:12px 6px;border-radius:6px;cursor:pointer;text-align:center;
   transition:all .15s ease;position:relative;
@@ -180,6 +152,7 @@ h1 span{color:var(--plate);}
 .tab[data-day="Sunday"] .dot{background:var(--plate);}
 .tab[data-day="Tuesday"] .dot{background:var(--teal);}
 .tab[data-day="Friday"] .dot{background:var(--blue);}
+.tab[data-day="Runs"] .dot{background:var(--cardio);}
 .tab.active{color:var(--chalk);border-color:var(--chalk);}
 .tab.today::after{
   content:"TODAY";position:absolute;top:-8px;right:6px;font-family:'Space Mono',monospace;
@@ -209,10 +182,7 @@ h1 span{color:var(--plate);}
 .ex-name-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
 .ex-name{font-family:'Oswald',sans-serif;font-weight:500;font-size:16px;text-transform:uppercase;letter-spacing:.01em;line-height:1.25;}
 .ex.done .ex-name{color:var(--smoke);text-decoration:line-through;text-decoration-color:#4a5a52;}
-.pr-chip{
-  font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;background:var(--gold);
-  color:var(--ink);padding:2px 6px;border-radius:4px;letter-spacing:.04em;
-}
+.pr-chip{font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;background:var(--gold);color:var(--ink);padding:2px 6px;border-radius:4px;letter-spacing:.04em;}
 .ex-target{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--plate);margin-top:2px;}
 .ex.done .ex-target{color:var(--smoke);}
 .ex-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
@@ -224,12 +194,20 @@ h1 span{color:var(--plate);}
 .field input::placeholder{color:#5c6169;}
 .field input:focus{outline:none;border-color:var(--teal);}
 
+/* RUNS TAB */
+.run-form{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:16px;}
+.run-form-title{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--cardio);margin-bottom:10px;}
+.run-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.run-fields .field.full{grid-column:1/-1;}
+.run-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:8px;}
+.run-card-top{display:flex;justify-content:space-between;align-items:baseline;font-family:'Space Mono',monospace;font-size:12px;color:var(--cardio);margin-bottom:4px;}
+.run-card-stats{font-family:'Oswald',sans-serif;font-size:15px;font-weight:500;}
+.run-card-notes{font-size:12.5px;color:var(--smoke);margin-top:4px;}
+.run-empty{color:var(--smoke);font-size:13px;text-align:center;padding:20px 0;}
+
 /* ACTIONS */
 .actions{display:flex;gap:10px;position:sticky;bottom:14px;margin-top:6px;}
-.btn{
-  flex:1;padding:14px;border-radius:8px;border:none;font-family:'Oswald',sans-serif;font-weight:600;
-  font-size:15px;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;
-}
+.btn{flex:1;padding:14px;border-radius:8px;border:none;font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;}
 .btn-save{background:var(--plate);color:var(--ink);box-shadow:0 4px 18px rgba(224,86,47,.35);}
 .btn-save:active{transform:scale(.98);}
 .btn-history{background:var(--panel);color:var(--chalk);border:1px solid var(--line);}
@@ -252,11 +230,64 @@ h1 span{color:var(--plate);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 .reset-link{display:block;text-align:center;color:var(--smoke);font-size:11.5px;font-family:'Space Mono',monospace;margin-top:26px;text-decoration:underline;cursor:pointer;}
-.backup-row{display:flex;justify-content:center;gap:18px;}
+.backup-row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;}
 .backup-row .reset-link{margin-top:26px;}
+
+/* AUTH OVERLAY */
+.auth-overlay{position:fixed;inset:0;background:var(--ink);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
+.auth-overlay.show{display:flex;}
+.auth-card{width:100%;max-width:360px;text-align:center;margin:auto;}
+.auth-daruma{width:84px;height:100px;margin:0 auto 14px;}
+.auth-card h2{font-family:'Oswald',sans-serif;font-weight:700;font-size:30px;text-transform:uppercase;margin:0 0 6px;}
+.auth-card h2 span{color:var(--plate);}
+.auth-sub{color:var(--smoke);font-size:13px;margin-bottom:20px;}
+.auth-tabs{display:flex;gap:8px;margin-bottom:16px;}
+.auth-tab{flex:1;padding:9px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--smoke);font-family:'Oswald',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;}
+.auth-tab.active{color:var(--chalk);border-color:var(--chalk);}
+.auth-card .daruma-input{text-align:left;}
+.auth-submit{width:100%;margin-top:4px;}
+.auth-error{color:#e06060;font-size:12px;min-height:16px;margin:8px 0;font-family:'Space Mono',monospace;}
+.auth-links{display:flex;justify-content:space-between;margin-top:18px;font-family:'Space Mono',monospace;font-size:11px;color:var(--smoke);}
+.auth-links span{cursor:pointer;text-decoration:underline;}
+.auth-note{margin-top:22px;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;font-size:11.5px;color:var(--smoke);line-height:1.5;text-align:left;font-family:'Space Mono',monospace;}
+#authUsernameWrap{display:none;}
 </style>
 </head>
 <body>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-daruma" id="authDaruma"></div>
+    <h2>IRON<span>LOG</span></h2>
+    <p class="auth-sub">Log in to sync your training across every device.</p>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="authTabLogin">Log In</div>
+      <div class="auth-tab" id="authTabSignup">Create Account</div>
+    </div>
+    <div id="authUsernameWrap">
+      <input type="text" class="daruma-input" id="authUsername" placeholder="Username (shown on the community feed)" maxlength="24">
+    </div>
+    <input type="email" class="daruma-input" id="authEmail" placeholder="Email" autocomplete="email">
+    <input type="password" class="daruma-input" id="authPassword" placeholder="Password" autocomplete="current-password">
+    <div class="auth-error" id="authError"></div>
+    <button class="daruma-btn left auth-submit" id="authSubmit">Log In</button>
+    <div class="auth-links">
+      <span id="authForgot">Forgot password?</span>
+      <span id="authGuest">Continue without an account</span>
+    </div>
+  </div>
+</div>
+
+<div class="account-bar" id="accountBar" style="display:none;">
+  <div class="share-toggle" id="shareToggleWrap" style="display:none;">
+    <span>Share to community</span>
+    <div class="switch" id="shareSwitch"><div class="knob"></div></div>
+  </div>
+  <span class="acc-link" id="communityLink">Community</span>
+  <span class="acc-name" id="accountEmail"></span>
+  <span class="acc-link" id="accountLogout">Log out</span>
+</div>
+
 <div class="wrap">
 
   <div class="header">
@@ -316,7 +347,7 @@ h1 span{color:var(--plate);}
 
   <div class="tabs" id="tabs"></div>
 
-  <div class="progress-row">
+  <div class="progress-row" id="progressRow">
     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     <div class="progress-label" id="progressLabel">0/0</div>
   </div>
@@ -340,13 +371,31 @@ h1 span{color:var(--plate);}
 
 <div class="toast" id="toast">Saved</div>
 
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
 <script>
 (function(){
 
-// ---------- storage shim: works inside Claude artifacts (window.storage) ----------
+// ---------- Firebase (optional — only activates if firebase-config.js has real values) ----------
+const cfg = (typeof firebaseConfig !== 'undefined') ? firebaseConfig : null;
+const FIREBASE_CONFIGURED = !!(cfg && cfg.apiKey && cfg.apiKey !== "YOUR_API_KEY");
+let auth = null, db = null, currentUser = null, guestMode = false, remoteUnsub = null;
+
+if(FIREBASE_CONFIGURED && window.firebase){
+  try{
+    firebase.initializeApp(cfg);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  }catch(e){ console.error('Firebase init failed', e); auth = null; db = null; }
+}
+
+// ---------- local fallback storage: works inside Claude artifacts (window.storage) ----------
 // ---------- and also as a plain static file, e.g. hosted on GitHub Pages (localStorage) ----------
 const hasCloudStorage = !!(window.storage && window.storage.get);
-const storage = {
+const localFallback = {
   async get(key){
     if(hasCloudStorage){
       try{ const r = await window.storage.get(key); return r ? r.value : null; }
@@ -410,7 +459,8 @@ const PROGRAM = {
     {n:"Situp", t:"2 × 15–25"}
   ]
 };
-const DAYS = ["Sunday","Tuesday","Friday"];
+const PROGRAM_DAYS = ["Sunday","Tuesday","Friday"];
+const TABS = ["Sunday","Tuesday","Friday","Runs"];
 const DAY_INDEX = {Sunday:0, Monday:1, Tuesday:2, Wednesday:3, Thursday:4, Friday:5, Saturday:6};
 const SCHEDULED_INDEXES = [0,2,5];
 const STREAK_MILESTONES = [3,7,14,21,30,50,75,100,150,200,365];
@@ -451,7 +501,8 @@ const QUOTES = [
   "Fall in love with the process, not just the result.",
   "You're stronger than the excuse you almost used today.",
   "Every checked box is proof you kept your word to yourself.",
-  "The streak isn't the point. Who it's turning you into is."
+  "The streak isn't the point. Who it's turning you into is.",
+  "Every mile logged is a mile the old you wouldn't have run."
 ];
 
 function hashStr(str){
@@ -464,13 +515,19 @@ function hashStr(str){
 let currentDay = null;
 let draft = {};
 let history = [];
+let runs = [];
 let historyOpen = false;
-let darumaGoal = {text:"", leftFilled:false, rightFilled:false, setDate:null, achievedDate:null};
+let darumaGoal = defaultDaruma();
 let darumaHistory = [];
+let shareToCommunity = false;
 let shuffledQuoteIndex = null;
+let persistTimer = null;
+let applyingRemoteUpdate = false;
 
+function defaultDaruma(){ return {text:"", leftFilled:false, rightFilled:false, setDate:null, achievedDate:null}; }
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function todayDayName(){ return new Date().toLocaleDateString('en-US',{weekday:'long'}); }
+function vibrate(pattern){ if(navigator.vibrate){ try{ navigator.vibrate(pattern); }catch(e){} } }
 
 function emptyDraftFor(day){
   const exObj = {};
@@ -483,6 +540,20 @@ function parseWeight(w){
   const m = String(w).match(/[\d.]+/);
   return m ? parseFloat(m[0]) : null;
 }
+function parseDurationToSeconds(str){
+  if(!str) return null;
+  const parts = String(str).trim().split(':').map(Number);
+  if(parts.some(isNaN)) return null;
+  if(parts.length === 2) return parts[0]*60 + parts[1];
+  if(parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  return null;
+}
+function formatPace(secondsPerUnit){
+  if(secondsPerUnit == null || !isFinite(secondsPerUnit)) return null;
+  const m = Math.floor(secondsPerUnit/60);
+  const s = Math.round(secondsPerUnit%60);
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
 
 function lastLoggedFor(day, name){
   for(let i=history.length-1;i>=0;i--){
@@ -493,7 +564,6 @@ function lastLoggedFor(day, name){
   }
   return null;
 }
-
 function maxWeightFor(day, name){
   let max = null;
   history.forEach(h => {
@@ -509,7 +579,9 @@ function maxWeightFor(day, name){
 
 // ---------- stats ----------
 function loggedDates(){
-  return new Set(history.filter(h => h.exercises.some(e=>e.done)).map(h => h.date));
+  const s = new Set(history.filter(h => h.exercises.some(e=>e.done)).map(h => h.date));
+  runs.forEach(r => s.add(r.date));
+  return s;
 }
 function computeStreak(){
   const active = loggedDates();
@@ -525,7 +597,7 @@ function computeStreak(){
   return streak;
 }
 function computeTotalSessions(){
-  return history.filter(h => h.exercises.some(e=>e.done)).length;
+  return history.filter(h => h.exercises.some(e=>e.done)).length + runs.length;
 }
 function computeWeekCompletion(){
   const now = new Date();
@@ -561,7 +633,7 @@ function renderNextUp(){
   while(!SCHEDULED_INDEXES.includes(idx)){ idx = (idx+1)%7; daysAhead++; }
   const names = Object.keys(DAY_INDEX);
   const nextName = names.find(n => DAY_INDEX[n]===idx);
-  el.innerHTML = `Rest day — next session is <b>${nextName}</b> (in ${daysAhead} day${daysAhead>1?'s':''}).`;
+  el.innerHTML = `Rest day — next session is <b>${nextName}</b> (in ${daysAhead} day${daysAhead>1?'s':''}). Go for a run today?`;
 }
 
 // ---------- quotes ----------
@@ -576,7 +648,7 @@ document.getElementById('quoteShuffle').onclick = () => {
   renderQuote();
 };
 
-// ---------- daruma icon ----------
+// ---------- daruma icon (angry / hardcore) ----------
 function darumaSVG(leftFilled, rightFilled){
   const leftEye = leftFilled ? '#15171c' : '#edeae2';
   const rightEye = rightFilled ? '#15171c' : '#edeae2';
@@ -586,24 +658,14 @@ function darumaSVG(leftFilled, rightFilled){
     <ellipse cx="50" cy="70" rx="42" ry="46" fill="none" stroke="#8a2e1c" stroke-width="2"/>
     <path d="M12 78 C12 100 30 114 50 114 C70 114 88 100 88 78 Z" fill="#d6502f"/>
     <ellipse cx="50" cy="46" rx="29" ry="25" fill="#f2ede2"/>
-
-    <!-- furrowed angry brows -->
     <path d="M19 36 L41 46" fill="none" stroke="#15171c" stroke-width="5.5" stroke-linecap="round"/>
     <path d="M81 36 L59 46" fill="none" stroke="#15171c" stroke-width="5.5" stroke-linecap="round"/>
-    <!-- anger crease -->
     <path d="M46 34 L50 40 L46 40 M54 34 L50 40 L54 40" fill="none" stroke="#8a2e1c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-
-    <!-- narrowed, filled-on-achieve eyes -->
     <ellipse cx="38" cy="49" rx="7.5" ry="5.5" fill="${leftEye}" stroke="#15171c" stroke-width="2.5"/>
     <ellipse cx="62" cy="49" rx="7.5" ry="5.5" fill="${rightEye}" stroke="#15171c" stroke-width="2.5"/>
-
-    <!-- fierce mustache -->
     <path d="M20 60 C27 56 33 62 37 58" fill="none" stroke="#15171c" stroke-width="3.5" stroke-linecap="round"/>
     <path d="M80 60 C73 56 67 62 63 58" fill="none" stroke="#15171c" stroke-width="3.5" stroke-linecap="round"/>
-
-    <!-- firm downturned frown -->
     <path d="M40 68 Q50 60 60 68" fill="none" stroke="#15171c" stroke-width="3.5" stroke-linecap="round"/>
-
     <circle cx="50" cy="88" r="15" fill="none" stroke="#e8b93f" stroke-width="2"/>
     <text x="50" y="94" text-anchor="middle" font-size="16" font-family="serif" fill="#e8b93f">力</text>
   </svg>`;
@@ -612,7 +674,6 @@ function renderDarumaIcons(){
   document.getElementById('headerDaruma').innerHTML = darumaSVG(darumaGoal.leftFilled, darumaGoal.rightFilled);
   document.getElementById('darumaCardIcon').innerHTML = darumaSVG(darumaGoal.leftFilled, darumaGoal.rightFilled);
 }
-
 function renderDarumaBody(){
   const body = document.getElementById('darumaBody');
   if(!darumaGoal.leftFilled){
@@ -622,15 +683,16 @@ function renderDarumaBody(){
       <input type="text" class="daruma-input" id="darumaInput" placeholder="e.g. Get in the best shape of my life" value="${darumaGoal.text || ''}">
       <button class="daruma-btn left" id="darumaSetBtn">Set Goal — Fill Left Eye</button>
     `;
-    document.getElementById('darumaSetBtn').onclick = async () => {
+    document.getElementById('darumaSetBtn').onclick = () => {
       const val = document.getElementById('darumaInput').value.trim();
       if(!val) return;
       darumaGoal.text = val;
       darumaGoal.leftFilled = true;
       darumaGoal.setDate = todayStr();
-      await persistDaruma();
+      schedulePersist(0);
       renderDarumaIcons();
       renderDarumaBody();
+      vibrate(15);
       showToast('Left eye filled — now go earn the right one.');
     };
   } else if(darumaGoal.leftFilled && !darumaGoal.rightFilled){
@@ -640,15 +702,15 @@ function renderDarumaBody(){
       <div class="daruma-sub">Left eye filled ${darumaGoal.setDate ? 'on '+darumaGoal.setDate : ''}. When you've actually achieved it, fill the right eye.</div>
       <button class="daruma-btn right" id="darumaAchieveBtn">Mark Achieved — Fill Right Eye</button>
     `;
-    document.getElementById('darumaAchieveBtn').onclick = async () => {
+    document.getElementById('darumaAchieveBtn').onclick = () => {
       darumaGoal.rightFilled = true;
       darumaGoal.achievedDate = todayStr();
       darumaHistory.push({text:darumaGoal.text, setDate:darumaGoal.setDate, achievedDate:darumaGoal.achievedDate});
-      await persistDaruma();
-      await persistDarumaHistory();
+      schedulePersist(0);
       renderDarumaIcons();
       renderDarumaBody();
       celebrate();
+      vibrate([15,60,15,60,30]);
       showToast('Goal achieved. Both eyes filled.');
     };
   } else {
@@ -659,9 +721,9 @@ function renderDarumaBody(){
       <button class="daruma-btn reset" id="darumaNewBtn">Start New Daruma</button>
       ${darumaHistory.length ? `<div class="daruma-history">${darumaHistory.slice().reverse().map(h=>`<div class="daruma-history-item">✓ <b>${h.text}</b> — ${h.achievedDate}</div>`).join('')}</div>` : ''}
     `;
-    document.getElementById('darumaNewBtn').onclick = async () => {
-      darumaGoal = {text:"", leftFilled:false, rightFilled:false, setDate:null, achievedDate:null};
-      await persistDaruma();
+    document.getElementById('darumaNewBtn').onclick = () => {
+      darumaGoal = defaultDaruma();
+      schedulePersist(0);
       renderDarumaIcons();
       renderDarumaBody();
     };
@@ -677,6 +739,11 @@ function renderHeatmap(){
     if(!dayMap[h.date]) dayMap[h.date] = {done:0, total:0};
     dayMap[h.date].done += h.exercises.filter(e=>e.done).length;
     dayMap[h.date].total += h.exercises.length;
+  });
+  runs.forEach(r => {
+    if(!dayMap[r.date]) dayMap[r.date] = {done:0, total:0};
+    dayMap[r.date].done += 1;
+    dayMap[r.date].total += 1;
   });
   const totalDays = 98;
   const end = new Date(); end.setHours(0,0,0,0);
@@ -704,22 +771,31 @@ function renderHeatmap(){
   }
 }
 
-// ---------- render ----------
+// ---------- tabs / views ----------
 function renderTabs(){
   const tabsEl = document.getElementById('tabs');
   tabsEl.innerHTML = "";
-  DAYS.forEach(day => {
+  TABS.forEach(day => {
     const btn = document.createElement('div');
     btn.className = 'tab' + (day===currentDay?' active':'') + (day===todayDayName()?' today':'');
     btn.dataset.day = day;
     btn.innerHTML = `<span class="dot"></span>${day}`;
-    btn.onclick = () => { currentDay = day; renderDayView(); };
+    btn.onclick = () => { currentDay = day; document.getElementById('saveBtn').textContent = day==='Runs' ? 'Log Run' : 'Save Session'; renderDayView(); };
     tabsEl.appendChild(btn);
   });
 }
 
 function renderList(){
   const listEl = document.getElementById('list');
+  const progressRow = document.getElementById('progressRow');
+
+  if(currentDay === 'Runs'){
+    progressRow.style.display = 'none';
+    renderRunsView(listEl);
+    return;
+  }
+  progressRow.style.display = 'flex';
+
   listEl.innerHTML = "";
   const dayDraft = draft[currentDay];
   let doneCount = 0;
@@ -762,14 +838,15 @@ function renderList(){
 
     row.querySelector('.ex-top').onclick = () => {
       state.done = !state.done;
-      persistDraft();
+      vibrate(state.done ? 12 : 6);
+      schedulePersist(400);
       renderList();
     };
     row.querySelectorAll('.ex-fields input').forEach(inp => {
       inp.addEventListener('click', e => e.stopPropagation());
       inp.addEventListener('input', e => {
         state[e.target.dataset.field] = e.target.value;
-        persistDraft();
+        schedulePersist(700);
         renderList();
       });
     });
@@ -778,6 +855,49 @@ function renderList(){
   });
 
   renderProgress(doneCount);
+}
+
+function renderRunsView(listEl){
+  listEl.innerHTML = `
+    <div class="run-form">
+      <div class="run-form-title">Log a run</div>
+      <div class="run-fields">
+        <div class="field"><label>Date</label><input type="date" id="runDate" value="${todayStr()}"></div>
+        <div class="field"><label>Distance</label><input type="text" id="runDistance" placeholder="e.g. 5 mi"></div>
+        <div class="field"><label>Duration</label><input type="text" id="runDuration" placeholder="mm:ss e.g. 42:00"></div>
+        <div class="field"><label>Pace shows after saving</label><input type="text" disabled placeholder="auto-calculated"></div>
+        <div class="field full"><label>Notes</label><input type="text" id="runNotes" placeholder="e.g. easy pace, humid, felt strong"></div>
+      </div>
+    </div>
+    <div id="runHistory"></div>
+  `;
+  renderRunHistory();
+}
+
+function renderRunHistory(){
+  const el = document.getElementById('runHistory');
+  if(!el) return;
+  if(runs.length === 0){
+    el.innerHTML = '<div class="run-empty">No runs logged yet. Add one above.</div>';
+    return;
+  }
+  const sorted = runs.slice().sort((a,b)=> b.date.localeCompare(a.date) || b.ts - a.ts);
+  el.innerHTML = sorted.map(r => {
+    const dist = parseWeight(r.distance);
+    const secs = parseDurationToSeconds(r.duration);
+    let paceLine = '';
+    if(dist && secs){
+      const unit = (r.distance.match(/km/i)) ? 'km' : 'mi';
+      paceLine = ` · ${formatPace(secs/dist)}/${unit} pace`;
+    }
+    return `
+      <div class="run-card">
+        <div class="run-card-top"><span>${r.date}</span></div>
+        <div class="run-card-stats">${r.distance || '—'}${r.duration ? ' in ' + r.duration : ''}${paceLine}</div>
+        ${r.notes ? `<div class="run-card-notes">${r.notes}</div>` : ''}
+      </div>
+    `;
+  }).join('');
 }
 
 function renderProgress(doneCountArg){
@@ -795,6 +915,10 @@ function renderProgress(doneCountArg){
 function renderHistory(){
   const panel = document.getElementById('historyPanel');
   panel.innerHTML = "";
+  if(currentDay === 'Runs'){
+    panel.innerHTML = '<div class="empty-note">Run history is shown above the log form on the Runs tab.</div>';
+    return;
+  }
   const relevant = history.filter(h => h.day === currentDay).slice().reverse();
   if(relevant.length === 0){
     panel.innerHTML = `<div class="empty-note">No saved ${currentDay} sessions yet.</div>`;
@@ -826,13 +950,81 @@ function renderAll(){
   renderDarumaIcons();
   renderDarumaBody();
   renderDayView();
+  renderShareToggleUI();
 }
 
-// ---------- persistence ----------
-async function persistDraft(){ await storage.set('workout-draft', JSON.stringify(draft)); }
-async function persistHistory(){ await storage.set('workout-history', JSON.stringify(history)); }
-async function persistDaruma(){ await storage.set('daruma-goal', JSON.stringify(darumaGoal)); }
-async function persistDarumaHistory(){ await storage.set('daruma-history', JSON.stringify(darumaHistory)); }
+// ---------- persistence (local fallback, or Firestore when logged in) ----------
+function buildStateSnapshot(){
+  return { history, draft, darumaGoal, darumaHistory, runs, shareToCommunity };
+}
+async function persistAllNow(){
+  if(applyingRemoteUpdate) return;
+  const snap = buildStateSnapshot();
+  if(db && currentUser){
+    try{
+      await db.collection('users').doc(currentUser.uid).collection('app').doc('state')
+        .set(Object.assign({}, snap, {updatedAt: firebase.firestore.FieldValue.serverTimestamp()}));
+    }catch(e){ console.error('Sync failed', e); }
+  } else {
+    await localFallback.set('ironlog-state', JSON.stringify(snap));
+  }
+}
+function schedulePersist(delay){
+  clearTimeout(persistTimer);
+  persistTimer = setTimeout(persistAllNow, delay == null ? 500 : delay);
+}
+
+async function migrateOldLocalKeys(){
+  const oh = await localFallback.get('workout-history');
+  const od = await localFallback.get('workout-draft');
+  const og = await localFallback.get('daruma-goal');
+  const ogh = await localFallback.get('daruma-history');
+  if(!oh && !od && !og && !ogh) return null;
+  const result = {
+    history: oh ? JSON.parse(oh) : [],
+    draft: od ? JSON.parse(od) : {},
+    darumaGoal: og ? JSON.parse(og) : defaultDaruma(),
+    darumaHistory: ogh ? JSON.parse(ogh) : [],
+    runs: [],
+    shareToCommunity: false
+  };
+  await localFallback.set('ironlog-state', JSON.stringify(result));
+  return result;
+}
+
+async function loadState(){
+  if(db && currentUser){
+    try{
+      const docSnap = await db.collection('users').doc(currentUser.uid).collection('app').doc('state').get();
+      if(docSnap.exists) return docSnap.data();
+      return null;
+    }catch(e){ console.error(e); return null; }
+  }
+  const raw = await localFallback.get('ironlog-state');
+  if(raw) return JSON.parse(raw);
+  return await migrateOldLocalKeys();
+}
+
+function attachRealtimeListener(){
+  detachRealtimeListener();
+  if(!db || !currentUser) return;
+  remoteUnsub = db.collection('users').doc(currentUser.uid).collection('app').doc('state')
+    .onSnapshot((docSnap) => {
+      if(!docSnap.exists) return;
+      const d = docSnap.data();
+      applyingRemoteUpdate = true;
+      history = d.history || [];
+      darumaGoal = d.darumaGoal || defaultDaruma();
+      darumaHistory = d.darumaHistory || [];
+      runs = d.runs || [];
+      shareToCommunity = !!d.shareToCommunity;
+      draft = d.draft || {};
+      PROGRAM_DAYS.forEach(day => { if(!draft[day] || draft[day].todayDate !== todayStr()) draft[day] = emptyDraftFor(day); });
+      renderAll();
+      applyingRemoteUpdate = false;
+    }, (err) => console.error('listener error', err));
+}
+function detachRealtimeListener(){ if(remoteUnsub){ remoteUnsub(); remoteUnsub = null; } }
 
 function showToast(msg){
   const t = document.getElementById('toast');
@@ -864,31 +1056,180 @@ function celebrate(){
   }
 }
 
-async function init(){
-  const savedHistory = await storage.get('workout-history');
-  history = savedHistory ? JSON.parse(savedHistory) : [];
+// ---------- community feed sharing ----------
+async function postToCommunity(payload){
+  if(!db || !currentUser || !shareToCommunity) return;
+  try{
+    await db.collection('community_feed').add(Object.assign({
+      uid: currentUser.uid,
+      username: currentUser.displayName || 'Anonymous',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, payload));
+  }catch(e){ console.error('community post failed', e); }
+}
 
-  const savedDraft = await storage.get('workout-draft');
-  draft = savedDraft ? JSON.parse(savedDraft) : {};
+function renderShareToggleUI(){
+  const wrap = document.getElementById('shareToggleWrap');
+  const sw = document.getElementById('shareSwitch');
+  if(!db || !currentUser){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'flex';
+  sw.classList.toggle('on', shareToCommunity);
+}
+document.getElementById('shareSwitch').onclick = () => {
+  shareToCommunity = !shareToCommunity;
+  renderShareToggleUI();
+  schedulePersist(0);
+  showToast(shareToCommunity ? 'Now sharing to community feed' : 'Sharing turned off');
+};
+document.getElementById('communityLink').onclick = () => { window.location.href = 'community.html'; };
 
-  const savedDaruma = await storage.get('daruma-goal');
-  darumaGoal = savedDaruma ? JSON.parse(savedDaruma) : {text:"", leftFilled:false, rightFilled:false, setDate:null, achievedDate:null};
-
-  const savedDarumaHistory = await storage.get('daruma-history');
-  darumaHistory = savedDarumaHistory ? JSON.parse(savedDarumaHistory) : [];
-
-  DAYS.forEach(day => {
+// ---------- boot ----------
+async function boot(){
+  const loaded = await loadState();
+  if(loaded){
+    history = loaded.history || [];
+    draft = loaded.draft || {};
+    darumaGoal = loaded.darumaGoal || defaultDaruma();
+    darumaHistory = loaded.darumaHistory || [];
+    runs = loaded.runs || [];
+    shareToCommunity = !!loaded.shareToCommunity;
+  } else {
+    history = []; draft = {}; darumaGoal = defaultDaruma(); darumaHistory = []; runs = []; shareToCommunity = false;
+  }
+  PROGRAM_DAYS.forEach(day => {
     if(!draft[day] || draft[day].todayDate !== todayStr()){
       draft[day] = emptyDraftFor(day);
     }
   });
-  await persistDraft();
-
-  currentDay = DAYS.includes(todayDayName()) ? todayDayName() : "Sunday";
+  await persistAllNow();
+  currentDay = PROGRAM_DAYS.includes(todayDayName()) ? todayDayName() : "Sunday";
   renderAll();
 }
 
+// ---------- auth wiring ----------
+document.getElementById('authDaruma').innerHTML = darumaSVG(false, false);
+let authMode = 'login';
+function updateAuthTabs(){
+  document.getElementById('authTabLogin').classList.toggle('active', authMode==='login');
+  document.getElementById('authTabSignup').classList.toggle('active', authMode==='signup');
+  document.getElementById('authUsernameWrap').style.display = authMode==='signup' ? 'block' : 'none';
+  document.getElementById('authSubmit').textContent = authMode==='login' ? 'Log In' : 'Create Account';
+  document.getElementById('authError').textContent = '';
+}
+document.getElementById('authTabLogin').onclick = () => { authMode='login'; updateAuthTabs(); };
+document.getElementById('authTabSignup').onclick = () => { authMode='signup'; updateAuthTabs(); };
+
+function friendlyAuthError(e){
+  const code = (e && e.code) || '';
+  if(code.includes('wrong-password') || code.includes('invalid-credential')) return 'Incorrect email or password.';
+  if(code.includes('user-not-found')) return 'No account with that email.';
+  if(code.includes('email-already-in-use')) return 'An account already exists — try logging in.';
+  if(code.includes('weak-password')) return 'Password should be at least 6 characters.';
+  if(code.includes('invalid-email')) return 'That email address looks invalid.';
+  return 'Something went wrong. Please try again.';
+}
+
+document.getElementById('authSubmit').onclick = async () => {
+  if(!auth){ return; }
+  const email = document.getElementById('authEmail').value.trim();
+  const pw = document.getElementById('authPassword').value;
+  const username = document.getElementById('authUsername').value.trim();
+  const errEl = document.getElementById('authError');
+  errEl.style.color = '';
+  errEl.textContent = '';
+  if(!email || !pw){ errEl.textContent = 'Enter an email and password.'; return; }
+  if(authMode === 'signup' && !username){ errEl.textContent = 'Pick a username for the community feed.'; return; }
+  try{
+    if(authMode === 'login'){
+      await auth.signInWithEmailAndPassword(email, pw);
+    } else {
+      const cred = await auth.createUserWithEmailAndPassword(email, pw);
+      await cred.user.updateProfile({displayName: username});
+      currentUser = auth.currentUser;
+    }
+  }catch(e){
+    errEl.textContent = friendlyAuthError(e);
+  }
+};
+
+document.getElementById('authForgot').onclick = async () => {
+  if(!auth) return;
+  const email = document.getElementById('authEmail').value.trim();
+  const errEl = document.getElementById('authError');
+  if(!email){ errEl.textContent = 'Enter your email above first.'; return; }
+  try{
+    await auth.sendPasswordResetEmail(email);
+    errEl.style.color = 'var(--teal)';
+    errEl.textContent = 'Password reset email sent.';
+  }catch(e){
+    errEl.style.color = '';
+    errEl.textContent = friendlyAuthError(e);
+  }
+};
+
+document.getElementById('authGuest').onclick = () => {
+  guestMode = true;
+  document.getElementById('authOverlay').classList.remove('show');
+  boot();
+};
+
+document.getElementById('accountLogout').onclick = async () => {
+  detachRealtimeListener();
+  if(auth) { try{ await auth.signOut(); }catch(e){} }
+  guestMode = false;
+  location.reload();
+};
+
+if(auth){
+  document.getElementById('authOverlay').classList.add('show');
+  auth.onAuthStateChanged(async (user) => {
+    currentUser = user;
+    if(user){
+      document.getElementById('authOverlay').classList.remove('show');
+      document.getElementById('accountBar').style.display = 'flex';
+      document.getElementById('accountEmail').textContent = user.displayName || user.email;
+      attachRealtimeListener();
+      await boot();
+    } else if(guestMode){
+      document.getElementById('authOverlay').classList.remove('show');
+      document.getElementById('accountBar').style.display = 'none';
+      boot();
+    } else {
+      document.getElementById('authOverlay').classList.add('show');
+      document.getElementById('accountBar').style.display = 'none';
+    }
+  });
+} else {
+  document.getElementById('authOverlay').classList.remove('show');
+  document.getElementById('accountBar').style.display = 'none';
+  boot();
+}
+
+// ---------- save / actions ----------
 document.getElementById('saveBtn').onclick = async () => {
+  if(currentDay === 'Runs'){
+    const dateEl = document.getElementById('runDate');
+    const distEl = document.getElementById('runDistance');
+    const durEl = document.getElementById('runDuration');
+    const notesEl = document.getElementById('runNotes');
+    const date = dateEl.value || todayStr();
+    const distance = distEl.value.trim();
+    const duration = durEl.value.trim();
+    const notes = notesEl.value.trim();
+    if(!distance && !duration){ showToast('Add a distance or duration first'); return; }
+    runs.push({id: Date.now()+'-'+Math.random().toString(36).slice(2), date, distance, duration, notes, ts: Date.now()});
+    schedulePersist(0);
+    vibrate(12);
+    showToast('Run logged');
+    postToCommunity({type:'run', date, distance, duration, notes});
+
+    const newStreak = computeStreak();
+    if(STREAK_MILESTONES.includes(newStreak)){ showToast(`${newStreak}-day streak — milestone reached`); celebrate(); }
+
+    renderStats(); renderHeatmap(); renderList();
+    return;
+  }
+
   const dayDraft = draft[currentDay];
   const exercisesLog = PROGRAM[currentDay].map(ex => ({
     name: ex.n,
@@ -904,7 +1245,8 @@ document.getElementById('saveBtn').onclick = async () => {
   if(existingIdx >= 0) history[existingIdx] = entry;
   else history.push(entry);
 
-  await persistHistory();
+  schedulePersist(0);
+  postToCommunity({type:'workout', day: currentDay, date: todayStr(), doneCount, total});
 
   const newStreak = computeStreak();
   if(STREAK_MILESTONES.includes(newStreak)){
@@ -912,6 +1254,7 @@ document.getElementById('saveBtn').onclick = async () => {
     celebrate();
   } else {
     showToast(`Saved — ${doneCount}/${total} done`);
+    vibrate(12);
     if(doneCount === total && total > 0) celebrate();
   }
 
@@ -929,14 +1272,72 @@ document.getElementById('historyBtn').onclick = () => {
   if(historyOpen) renderHistory();
 };
 
-document.getElementById('clearDraft').onclick = async () => {
+document.getElementById('clearDraft').onclick = () => {
+  if(currentDay === 'Runs') return;
   draft[currentDay] = emptyDraftFor(currentDay);
-  await persistDraft();
+  schedulePersist(0);
   renderList();
   showToast('Cleared');
 };
 
-init();
+// ---------- backup export / import ----------
+document.getElementById('exportBackup').onclick = () => {
+  const data = Object.assign({exportedAt: new Date().toISOString()}, buildStateSnapshot());
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `ironlog-backup-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+};
+document.getElementById('importBackupLabel').onclick = () => document.getElementById('importBackupFile').click();
+document.getElementById('importBackupFile').onchange = (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      history = data.history || [];
+      draft = data.draft || {};
+      darumaGoal = data.darumaGoal || defaultDaruma();
+      darumaHistory = data.darumaHistory || [];
+      runs = data.runs || [];
+      shareToCommunity = !!data.shareToCommunity;
+      PROGRAM_DAYS.forEach(day => { if(!draft[day] || draft[day].todayDate !== todayStr()) draft[day] = emptyDraftFor(day); });
+      schedulePersist(0);
+      renderAll();
+      showToast('Backup restored');
+    }catch(err){
+      showToast('That file could not be read');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+};
+
+// ---------- PWA: install prompt + offline service worker ----------
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'flex';
+});
+document.getElementById('installBtn').onclick = async () => {
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBtn').style.display = 'none';
+};
+window.addEventListener('appinstalled', () => { document.getElementById('installBtn').style.display = 'none'; });
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
 })();
 </script>
 </body>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>IRON LOG — Community</title>
+<meta name="theme-color" content="#15171c">
+<link rel="icon" href="icon-32.png" sizes="32x32">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+:root{
+  --ink:#15171c; --panel:#1e2128; --panel-raised:#262a33; --line:#33373f;
+  --chalk:#edeae2; --smoke:#8b8f99; --plate:#e0562f; --plate-dim:#7a3524;
+  --gold:#e8b93f; --teal:#4fa98c; --blue:#5c7cfa; --cardio:#4fb8d6;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--ink);color:var(--chalk);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:640px;margin:0 auto;padding:24px 18px 80px;}
+.top-link{
+  display:inline-block;margin-bottom:16px;color:var(--smoke);font-family:'Space Mono',monospace;
+  font-size:12px;text-decoration:underline;cursor:pointer;
+}
+.header{margin-bottom:18px;}
+.eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--smoke);text-transform:uppercase;margin-bottom:6px;}
+h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:34px;letter-spacing:.01em;text-transform:uppercase;margin:0 0 4px;line-height:1;}
+h1 span{color:var(--plate);}
+.subhead{color:var(--smoke);font-size:13.5px;}
+
+.feed{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.card-user{font-family:'Oswald',sans-serif;font-weight:600;font-size:15px;text-transform:uppercase;}
+.card-time{font-family:'Space Mono',monospace;font-size:10.5px;color:var(--smoke);}
+.badge{
+  display:inline-block;font-family:'Space Mono',monospace;font-size:9.5px;font-weight:700;
+  padding:2px 7px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;margin-right:6px;
+}
+.badge.Sunday{background:var(--plate);color:var(--ink);}
+.badge.Tuesday{background:var(--teal);color:var(--ink);}
+.badge.Friday{background:var(--blue);color:var(--ink);}
+.badge.run{background:var(--cardio);color:var(--ink);}
+.card-detail{font-size:13.5px;color:var(--chalk);margin-top:4px;}
+.card-notes{font-size:12.5px;color:var(--smoke);margin-top:4px;font-style:italic;}
+.empty{color:var(--smoke);font-size:13.5px;text-align:center;padding:60px 0;line-height:1.6;}
+.loading{color:var(--smoke);text-align:center;padding:40px 0;font-family:'Space Mono',monospace;font-size:12px;}
+.setup-note{
+  margin-top:20px;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  font-size:12px;color:var(--smoke);line-height:1.6;font-family:'Space Mono',monospace;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-link" id="backLink">← Back to my log</div>
+  <div class="header">
+    <div class="eyebrow">Community Feed</div>
+    <h1>IRON<span>LOG</span></h1>
+    <div class="subhead">Recent workouts and runs from people who've opted in to share.</div>
+  </div>
+
+  <div id="feedRoot"><div class="loading">Loading feed…</div></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+(function(){
+  document.getElementById('backLink').onclick = () => { window.location.href = 'index.html'; };
+
+  const cfg = (typeof firebaseConfig !== 'undefined') ? firebaseConfig : null;
+  const FIREBASE_CONFIGURED = !!(cfg && cfg.apiKey && cfg.apiKey !== "YOUR_API_KEY");
+  const root = document.getElementById('feedRoot');
+
+  if(!FIREBASE_CONFIGURED || !window.firebase){
+    root.innerHTML = `
+      <div class="empty">The community feed isn't set up yet.</div>
+      <div class="setup-note">
+        This page needs the same firebase-config.js values as the main app.
+        Once login and sync are configured there, anyone who turns on
+        "Share to community" will show up here automatically.
+      </div>`;
+    return;
+  }
+
+  firebase.initializeApp(cfg);
+  const db = firebase.firestore();
+
+  function timeAgo(date){
+    if(!date) return '';
+    const s = Math.floor((Date.now() - date.getTime())/1000);
+    if(s < 60) return 'just now';
+    if(s < 3600) return Math.floor(s/60) + 'm ago';
+    if(s < 86400) return Math.floor(s/3600) + 'h ago';
+    return Math.floor(s/86400) + 'd ago';
+  }
+
+  db.collection('community_feed').orderBy('createdAt','desc').limit(60).get()
+    .then((snap) => {
+      if(snap.empty){
+        root.innerHTML = '<div class="empty">No shared sessions yet.<br>Turn on "Share to community" in the app to be the first.</div>';
+        return;
+      }
+      const cards = [];
+      snap.forEach((doc) => {
+        const d = doc.data();
+        const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+        const username = (d.username || 'Anonymous').replace(/</g,'&lt;');
+        if(d.type === 'run'){
+          cards.push(`
+            <div class="card">
+              <div class="card-top">
+                <div class="card-user">${username}</div>
+                <div class="card-time">${timeAgo(when)}</div>
+              </div>
+              <span class="badge run">Run</span>
+              <div class="card-detail">${d.distance || '—'}${d.duration ? ' in ' + d.duration : ''} · ${d.date || ''}</div>
+              ${d.notes ? `<div class="card-notes">${String(d.notes).replace(/</g,'&lt;')}</div>` : ''}
+            </div>`);
+        } else {
+          cards.push(`
+            <div class="card">
+              <div class="card-top">
+                <div class="card-user">${username}</div>
+                <div class="card-time">${timeAgo(when)}</div>
+              </div>
+              <span class="badge ${d.day || ''}">${d.day || 'Workout'}</span>
+              <div class="card-detail">${d.doneCount ?? 0}/${d.total ?? 0} exercises completed · ${d.date || ''}</div>
+            </div>`);
+        }
+      });
+      root.innerHTML = `<div class="feed">${cards.join('')}</div>`;
+    })
+    .catch((err) => {
+      console.error(err);
+      root.innerHTML = `
+        <div class="empty">Couldn't load the feed.</div>
+        <div class="setup-note">Make sure Firestore security rules allow public read access to the community_feed collection. See the setup guide for the exact rules to paste in.</div>`;
+    });
+})();
+</script>
+</body>
+</html>
